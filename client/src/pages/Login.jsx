@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { useLoginMutation, useSignupMutation } from "@/features/api/authApi.js";
+import { useRegisterUserMutation, useLoginUserMutation } from '../features/api/authApi';
+
+import { Loader2 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [signup, setSignup] = useState({
@@ -21,32 +27,81 @@ const Login = () => {
     role: "student",
   });
   const [login, setLogin] = useState({
-    email: "",
-    password: ""
+    identifier: "",
+    password: "",
   });
+
+  const [
+    registerUser,
+    {
+      data: registerData,
+      error: registerError,
+      isLoading: registerIsLoading,
+      isSuccess: registerIsSuccess,
+    },
+  ] = useRegisterUserMutation();
+  const [
+    loginUser,
+    {
+      data: loginData,
+      error: loginError,
+      isLoading: loginIsLoading,
+      isSuccess: loginIsSuccess,
+    },
+  ] = useLoginUserMutation();
 
   const [activeTab, setActiveTab] = useState("signup");
 
   const handleInputChange = (e, type) => {
     const { name, value } = e.target;
     if (type === "signup") {
-      setSignup(prevState => ({ ...prevState, [name]: value }));
+      setSignup((prevState) => ({ ...prevState, [name]: value }));
     } else {
-      setLogin(prevState => ({ ...prevState, [name]: value }));
+      setLogin((prevState) => ({ ...prevState, [name]: value }));
     }
   };
 
-  const handleSubmit = (type) => {
-    if (type === "signup") {
-      console.log("Signup", signup);
-    } else {
-      console.log("Login", login);
+  const handleSubmit = async (type) => {
+    const inputData = type === "signup" ? signup : login;
+    const action = type === "signup" ? registerUser : loginUser;
+  
+    console.log('Submitting data:', inputData);  // Log the request payload
+  
+    try {
+      const result = await action(inputData).unwrap();
+      console.log(`${type} successful:`, result);
+    } catch (err) {
+      console.error('Error during submission:', err);
+      if (err.data) {
+        console.error('Server response data:', err.data);
+      }
     }
-  }
+  };
+  
+//   useEffect(() => {
+  
+//     if (registerIsSuccess && registerData) {
+//     toast.success(registerData.message || "Signup Successful!");
+//     }
+//     if (registerError) {
+//     toast.error(registerError.message || "Signup Failed!");
+//     }
+//     if (loginIsSuccess && loginData) {
+//     toast.success(loginData.message || "Login Successful!");
+//     }
+//     if (loginError) { 
+//     toast.error(loginError.message || "Login Failed!");
+//     }
+  
+// },[loginIsLoading, registerIsLoading, loginData, registerData, loginError, registerError]);
 
   return (
     <div className="flex justify-center w-full pt-12">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-[400px]"
+      >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup">Signup</TabsTrigger>
           <TabsTrigger value="login">Login</TabsTrigger>
@@ -112,7 +167,13 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => handleSubmit("signup")}>Signup</Button>
+              <Button disabled={registerIsLoading} onClick={() => handleSubmit("signup")}>
+                {registerIsLoading ? <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin"/> Please wait...
+                </>
+                : "Signup"}
+                
+                </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -129,7 +190,7 @@ const Login = () => {
                 <Label htmlFor="email">Email or Phone</Label>
                 <Input
                   type="email"
-                  name="email"
+                  name="identifier"
                   onChange={(e) => handleInputChange(e, "login")}
                   placeholder="Eg. xy@z.com or 1236564554"
                   required
@@ -147,7 +208,12 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => handleSubmit("login")}>Login</Button>
+              <Button disabled={loginIsLoading} onClick={() => handleSubmit("login")}>
+                {loginIsLoading ? 
+                <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>Please wait...
+                </> : "Login"}
+              </Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -157,4 +223,3 @@ const Login = () => {
 };
 
 export default Login;
-
