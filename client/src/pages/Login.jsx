@@ -17,6 +17,7 @@ import { useRegisterUserMutation, useLoginUserMutation } from '../features/api/a
 
 import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [signup, setSignup] = useState({
@@ -78,22 +79,25 @@ const Login = () => {
     }
   };
   
-//   useEffect(() => {
+  useEffect(() => {
   
-//     if (registerIsSuccess && registerData) {
-//     toast.success(registerData.message || "Signup Successful!");
-//     }
-//     if (registerError) {
-//     toast.error(registerError.message || "Signup Failed!");
-//     }
-//     if (loginIsSuccess && loginData) {
-//     toast.success(loginData.message || "Login Successful!");
-//     }
-//     if (loginError) { 
-//     toast.error(loginError.message || "Login Failed!");
-//     }
+    if (registerIsSuccess && registerData) {
+    toast.success(registerData.message || "Signup Successful!");
+
+    }
+    if (registerError) {
+      const errorMessage = registerError.data?.message || registerError.message || "Signup Failed!";
+      toast.error(errorMessage);
+    }
+    if (loginError) { 
+      const errorMessage = loginError.data?.message || loginError.message || "Login Failed!";
+      toast.error(errorMessage);
+    }
+    if (loginIsSuccess && loginData) {
+    toast.success(loginData.message || "Login Successful!"); 
+    }
   
-// },[loginIsLoading, registerIsLoading, loginData, registerData, loginError, registerError]);
+},[loginIsLoading, registerIsLoading, loginData, registerData, loginError, registerError, loginIsSuccess, registerIsSuccess]);
 
   return (
     <div className="flex justify-center w-full pt-12">
