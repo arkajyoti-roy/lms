@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
         // Generate token
         const token = generateToken(newUser._id, res);
 
-        res.status(201).json({ token, message: 'User created and logged in successfully', user: { name: newUser.name } });
+        res.status(201).json({ token, message: 'User created and logged in successfully', user: { name: newUser.name, email: newUser.email } });
     } catch (error) {
         console.error('Signup Error:', error);
         res.status(500).json({ message: 'Server error during signup' });
@@ -56,7 +56,7 @@ export const login = async (req, res) => {
         // Generate token
         const token = generateToken(user._id, res);
 
-        res.status(200).json({ token, message: 'Login successful', user: { name: user.name } });
+        res.status(200).json({ token, message: `Welcome Back ${user.name}!`, user: { name: user.name, email: user.email } });
     } catch (error) {
         console.error('Login Error:', error);
         res.status(500).json({ message: 'Server error during login' });
