@@ -3,6 +3,8 @@ import Home from "./Components/Home";
 import Login from "./pages/Login";
 import MainLayout from "./layout/MainLayout";
 import Courses from "./pages/student/Courses";
+import MyLearning from "./pages/student/MyLearning";
+import Profile from "./pages/student/Profile";
 
 const appRouter = createBrowserRouter([
   {
@@ -17,6 +19,21 @@ const appRouter = createBrowserRouter([
         path: "/login",
         element: <Login />,
       }
+      ,
+      {
+        path: "/courses",
+        element: <Courses />,
+      }
+      ,
+      {
+        path: "/profile",
+        element: <Profile />,
+      }
+      ,
+      {
+        path: "/my-learning",
+        element: <MyLearning />,
+      }
     ],
   },
 ]);
@@ -25,7 +42,7 @@ const App = () => {
   return (
     <main>
       <RouterProvider router={appRouter} />
-      <Courses />
+      {/* <Courses /> */}
     </main>
   );
 };

@@ -1,3 +1,5 @@
+import Courses from "@/pages/student/Courses";
+
 // import { Skeleton } from "@/components/ui/skeleton"
 const Home = () => {
 
@@ -33,7 +35,7 @@ const Home = () => {
         </div>
       </div>
 
-    
+    <Courses/>
     </div>
   );
 };
