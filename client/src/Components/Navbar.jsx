@@ -20,7 +20,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
-  const user = false;
+  const user = true;
 
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-[#F9FAFB] flex items-center  md:justify-around md:gap-96 px-4 shadow-md fixed top-0 left-0 right-0 duration-300 justify-between z-40">

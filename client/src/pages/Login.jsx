@@ -1,5 +1,7 @@
 
 import { useEffect, useState } from "react";
+
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -50,7 +52,7 @@ const Login = () => {
       isSuccess: loginIsSuccess,
     },
   ] = useLoginUserMutation();
-
+const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("signup");
 
   const handleInputChange = (e, type) => {
@@ -80,11 +82,18 @@ const Login = () => {
   };
   
   useEffect(() => {
-  
-    if (registerIsSuccess && registerData) {
+  if (registerIsSuccess && registerData) {
     toast.success(registerData.message || "Signup Successful!");
-
-    }
+    setTimeout(() => {
+    navigate('/');
+    }, 2000);
+  }
+  if (loginIsSuccess && loginData) {
+    toast.success(loginData.message || "Login Successful!");
+    setTimeout(() => {
+    navigate('/');
+    }, 2000);
+  }
     if (registerError) {
       const errorMessage = registerError.data?.message || registerError.message || "Signup Failed!";
       toast.error(errorMessage);
@@ -93,9 +102,7 @@ const Login = () => {
       const errorMessage = loginError.data?.message || loginError.message || "Login Failed!";
       toast.error(errorMessage);
     }
-    if (loginIsSuccess && loginData) {
-    toast.success(loginData.message || "Login Successful!"); 
-    }
+    
   
 },[loginIsLoading, registerIsLoading, loginData, registerData, loginError, registerError, loginIsSuccess, registerIsSuccess]);
 
