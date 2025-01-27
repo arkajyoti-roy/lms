@@ -5,6 +5,8 @@ const Courses = () => {
   const isLoading = true;
   return (
     <div>
+        <h1 className="text-3xl font-bold text-center mb-3">Our Courses</h1>
+
       {isLoading ? (
         // <div className="flex flex-wrap -m-2 gap-5">
         //   {Array.from({ length: 8 }).map((_, index) => (
@@ -61,7 +63,6 @@ const Courses = () => {
         //   </div>
         // </section>
         <div>
-        <h1 className="text-3xl font-bold text-center">Our Courses</h1>
 
         <Course />
         </div>
