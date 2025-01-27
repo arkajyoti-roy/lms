@@ -100,6 +100,8 @@ const Login = () => {
 },[loginIsLoading, registerIsLoading, loginData, registerData, loginError, registerError, loginIsSuccess, registerIsSuccess]);
 
   return (
+    <>
+    <br />
     <div className="flex justify-center w-full pt-12">
       <Tabs
         value={activeTab}
@@ -223,6 +225,7 @@ const Login = () => {
         </TabsContent>
       </Tabs>
     </div>
+    </>
   );
 };
 
