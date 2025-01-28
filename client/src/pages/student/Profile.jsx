@@ -19,7 +19,8 @@ import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useLoadUserQuery();
-  const { user } = data;
+  // const { user } = data;
+  const user = data?.user;
   const [logout] = useLogoutUserMutation();
 
   if (isLoading) return <div>Loading...</div>;
