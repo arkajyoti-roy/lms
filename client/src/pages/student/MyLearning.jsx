@@ -2,13 +2,13 @@ import Course from "./Course";
 import CourseSkeleton from "./CourseSkeleton";
 
 const MyLearning = () => {
-  const isLoading = true;
-  const myLearningCourses = [1,2];
+  const isLoading = false;
+  const myLearningCourses = [1,1];
 
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-16 mx-auto">
-        <h1 className="mt-20 font-bold text-2xl mb-5 text-center">My Learning</h1>
+        <h1 className="mt-20 font-bold text-2xl mb-9 text-start">My Learning</h1>
         {isLoading ? (
           <CourseSkeleton />
         ) : myLearningCourses.length === 0 ? (
