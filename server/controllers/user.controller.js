@@ -34,31 +34,77 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { identifier, password } = req.body;
+        if (!identifier || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "All fields are required."
+            });
+        }
 
-        // Check if user exists by email or phone number
-        const user = await User.findOne({ $or: [{ email: identifier }, { phone: identifier }] });
+        // Find user by email or phone
+        const user = await User.findOne({
+            $or: [{ email: identifier }, { phone: identifier }]
+        });
+
         if (!user) {
-            console.log('User not found');
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect email/phone or password"
+            });
         }
 
-        // Log the fetched user for debugging
-        console.log('Fetched User:', user);
-
-        // Check password
-        const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password Match:', isMatch);
-
-        if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect email/phone or password"
+            });
         }
 
-        // Generate token
-        const token = generateToken(user._id, res);
+        generateToken(res, user, `Welcome back ${user.name}`);
 
-        res.status(200).json({ token, message: `Welcome Back ${user.name}!`, user: user });
     } catch (error) {
-        console.error('Login Error:', error);
-        res.status(500).json({ message: 'Server error during login' });
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to login"
+        });
+    }
+};
+
+
+
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie('token');
+        res.status(200).json({ message: 'Logged out successfully' });
+        return;
+    } catch (error) {
+        console.error('Logout Error:', error);
+        res.status(500).json({ message: 'Server error during logout' });
+    }
+}
+
+export const getUserProfile = async (req, res) => {
+    try {
+        const userId = req.id;
+        const user = await User.findById(userId).select('-password');
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found',
+                success: false,
+            });
+        }
+
+
+        return res.status(200).json({ user, success: true });
+
+
+
+    } catch (error) {
+        console.error('Get User Profile Error:', error);
+        console.log('Get User Profile Error:', error);
+        res.status(500).json({ message: 'Server error during fetching user profile' });
     }
 };

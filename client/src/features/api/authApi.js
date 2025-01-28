@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { userLoggedIn } from '../authSlice';
+// import { l } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const base_url = 'http://localhost:8080/api/v1/user/';
 
@@ -40,7 +41,17 @@ export const authApi = createApi({
                 }
             }
         }),
+        logoutUser: builder.mutation({
+            query: () => ({
+                url: 'logout',
+                method: 'POST'
+            }),
+        }),
+        loadUser: builder.query({
+            query: () => ({url: 'profile', 
+                method: 'GET'})
+        }),
     }),
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation } = authApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery } = authApi;
