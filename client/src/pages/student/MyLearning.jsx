@@ -1,9 +1,13 @@
-import Course from "./Course";
 import CourseSkeleton from "./CourseSkeleton";
+import { useLoadUserQuery } from "@/features/api/authApi";
+
 
 const MyLearning = () => {
-  const isLoading = false;
-  const myLearningCourses = [1,1];
+  const { data, isLoading } = useLoadUserQuery();
+  const user = data?.user || {};
+  const enrolledCourses = user.enrolledCourses || [];
+  // const isLoading = false;
+  // const myLearningCourses = [1,1];
 
   return (
     <section className="text-gray-600 body-font">
@@ -11,11 +15,11 @@ const MyLearning = () => {
         <h1 className="mt-20 font-bold text-2xl mb-9 text-start">My Learning</h1>
         {isLoading ? (
           <CourseSkeleton />
-        ) : myLearningCourses.length === 0 ? (
+        ) : user.enrolledCourses.length === 0 ? (
           <p className="text-center">You are not enrolled in any Course.</p>
         ) : (
           <div className="flex flex-wrap -m-2 gap-5">
-            {myLearningCourses.map((course, index) => (
+            {enrolledCourses.map((course, index) => (
               <div
                 key={index}
                 className="lg:w-1/4 md:w-1/2 w-full p-2 border rounded-lg transition-transform transform hover:scale-105 cursor-pointer"

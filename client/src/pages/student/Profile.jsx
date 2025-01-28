@@ -12,10 +12,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
-import { useLoadUserQuery } from "@/features/api/authApi";
+import { useLoadUserQuery, useLogoutUserMutation } from "@/features/api/authApi";
+import { useNavigate } from "react-router-dom";
+
 
 const Profile = () => {
+  const navigate = useNavigate();
   const { data, isLoading, isError, error } = useLoadUserQuery();
+  const { user } = data;
+  const [logout] = useLogoutUserMutation();
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -23,7 +28,16 @@ const Profile = () => {
 
   if (!data) return <div>No user data found</div>;
 
-  const { user } = data;
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      // Redirect to login page or home page after logout
+      navigate("login");
+    } catch (err) {
+      console.error("Failed to logout: ", err);
+    }
+  };
 
   return (
     <>
@@ -50,7 +64,7 @@ const Profile = () => {
                 <span className="font-normal text-gray-700">{user.phone}</span>
               </label>
               <label className="font-semibold text-xl">
-                Role: <span className="font-normal text-gray-700">{user.role}</span>
+                Role: <span className="font-normal text-gray-700">{user.role.toUpperCase()}</span>
               </label>
             </div>
             <Dialog>
@@ -63,7 +77,7 @@ const Profile = () => {
                 <DialogHeader>
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you're
+                    Make changes to your profile here. Click save when you&apos;re
                     done.
                   </DialogDescription>
                 </DialogHeader>
@@ -125,6 +139,9 @@ const Profile = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+            <Button variant="danger" className="mt-3" onClick={handleLogout}>
+              Logout
+            </Button>
           </div>
         </div>
       </div>
