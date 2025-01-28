@@ -12,8 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
+import { useLoadUserQuery } from "@/features/api/authApi";
 
 const Profile = () => {
+  const {data, isLoading, } = useLoadUserQuery();
+  console.log(data);
+  
   return (
     <>
     <div className="max-w-4xl mx-auto my-24 ">
