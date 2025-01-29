@@ -12,40 +12,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
-import { useLoadUserQuery } from "@/features/api/authApi";
+// import { useLoadUserQuery } from "@/features/api/authApi";
 // import { useNavigate } from "react-router-dom";
 // import { useDispatch } from "react-redux";
 // import { toast } from "react-toastify";
 // import { userLoggedOut } from "@/features/authSlice"; // Ensure this path is correct
 import { useUniversalLogout } from "@/utils/authUtils";
+import { useUserDetails } from "@/utils/useUserDetails"; // Corrected import statement
 
 const Profile = () => {
   const handleLogout = useUniversalLogout();
   // const dispatch = useDispatch();
   // const [logoutUser] = useLogoutUserMutation();
   // const navigate = useNavigate();
-  const { data, isLoading, isError, error } = useLoadUserQuery();
+  // const { data, isLoading, isError, error } = useLoadUserQuery();
   // const { user } = data;
-  const user = data?.user;
+  // const user = data?.user;
+  const { user, isLoading, isError, error } = useUserDetails();
 
   if (isLoading) return <div>Loading...</div>;
 
   if (isError) return <div>Error: {error.message}</div>;
 
-  if (!data) return <div>No user data found</div>;
-
-
-  // const handleLogout = async () => {
-  //   try {
-  //     await logoutUser().unwrap();
-  //     dispatch(userLoggedOut());
-  //     console.log('Logout successful');
-  //     toast.success((user && user.message) || "Logout Successful!");
-  //     navigate('/'); // Redirect to home page after logout
-  //   } catch (error) {
-  //     console.error('Logout error:', error);
-  //   }
-  // };
+  if (!user) return <div>No user data found</div>;
 
 
 
@@ -98,7 +87,7 @@ const Profile = () => {
                     </Label>
                     <Input
                       id="name"
-                      value={user.name}
+                      defaultValue={user.name}
                       className="col-span-3"
                     />
                   </div>
@@ -108,7 +97,7 @@ const Profile = () => {
                     </Label>
                     <Input
                       id="email"
-                      value={user.email}
+                      defaultValue={user.email}
                       className="col-span-3"
                     />
                   </div>
@@ -118,7 +107,7 @@ const Profile = () => {
                     </Label>
                     <Input
                       id="password"
-                      value={user.password}
+                      defaultValue={user.password}
                       className="col-span-3"
                     />
                   </div>
@@ -128,7 +117,7 @@ const Profile = () => {
                     </Label>
                     <Input
                       id="phone"
-                      value={user.phone}
+                      defaultValue={user.phone}
                       className="col-span-3"
                     />
                   </div>
@@ -140,7 +129,7 @@ const Profile = () => {
                       type="file"
                       multiple
                       className="col-span-3"
-                      value={user.photoUrl || ""}
+                      defaultValue={user.photoUrl || ""}
                     />
                   </div>
                 </div>

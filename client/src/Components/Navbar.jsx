@@ -1,8 +1,8 @@
 import { CropIcon, MenuIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useLoadUserQuery } from "@/features/api/authApi";
 import { useUniversalLogout } from "@/utils/authUtils";
+import { useUserDetails } from "@/utils/useUserDetails"; // Corrected import statement
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +21,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
-  const { data, isLoading } = useLoadUserQuery();
+  const { user, isLoading } = useUserDetails();
   const handleLogout = useUniversalLogout(); // Ensure the hook is always called at the top level
 
   if (isLoading) return <div>Loading...</div>;
-
-  const user = data?.user;
 
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-[#F9FAFB] flex items-center md:justify-around md:gap-96 px-4 shadow-md fixed top-0 left-0 right-0 duration-300 justify-between z-40">
