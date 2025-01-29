@@ -12,22 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
-// import { useLoadUserQuery } from "@/features/api/authApi";
-// import { useNavigate } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-// import { toast } from "react-toastify";
-// import { userLoggedOut } from "@/features/authSlice"; // Ensure this path is correct
 import { useUniversalLogout } from "@/utils/authUtils";
 import { useUserDetails } from "@/utils/useUserDetails"; // Corrected import statement
 
 const Profile = () => {
   const handleLogout = useUniversalLogout();
-  // const dispatch = useDispatch();
-  // const [logoutUser] = useLogoutUserMutation();
-  // const navigate = useNavigate();
-  // const { data, isLoading, isError, error } = useLoadUserQuery();
-  // const { user } = data;
-  // const user = data?.user;
   const { user, isLoading, isError, error } = useUserDetails();
 
   if (isLoading) return <div>Loading...</div>;
@@ -35,8 +24,6 @@ const Profile = () => {
   if (isError) return <div>Error: {error.message}</div>;
 
   if (!user) return <div>No user data found</div>;
-
-
 
   return (
     <>
@@ -52,7 +39,8 @@ const Profile = () => {
           <div>
             <div className="flex flex-col space-y-4">
               <label className="font-semibold text-xl">
-                Name: <span className="font-normal text-gray-700">{user.name}</span>
+                Name:{" "}
+                <span className="font-normal text-gray-700">{user.name}</span>
               </label>
               <label className="font-semibold text-xl">
                 Email:{" "}
@@ -63,7 +51,10 @@ const Profile = () => {
                 <span className="font-normal text-gray-700">{user.phone}</span>
               </label>
               <label className="font-semibold text-xl">
-                Role: <span className="font-normal text-gray-700">{user.role.toUpperCase()}</span>
+                Role:{" "}
+                <span className="font-normal text-gray-700">
+                  {user.role.toUpperCase()}
+                </span>
               </label>
             </div>
             <Dialog>
@@ -76,8 +67,8 @@ const Profile = () => {
                 <DialogHeader>
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re
-                    done.
+                    Make changes to your profile here. Click save when
+                    you&apos;re done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -138,7 +129,7 @@ const Profile = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <Button  className="mt-3 ml-3" onClick={handleLogout}>
+            <Button className="mt-3 ml-3" onClick={handleLogout}>
               Logout
             </Button>
           </div>
