@@ -2,7 +2,7 @@ import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import { generateToken } from '../utils/generateToken.js';
 
-// Sign up
+
 export const signup = async (req, res) => {
     try {
         const { name, email, phone, password } = req.body;
@@ -21,7 +21,7 @@ export const signup = async (req, res) => {
         await newUser.save();
 
 
-      const token =  generateToken(res, newUser);
+        const token = generateToken(res, newUser);
 
         res.status(201).json({ token, message: 'User created and logged in successfully', user: newUser });
     } catch (error) {
@@ -30,7 +30,7 @@ export const signup = async (req, res) => {
     }
 };
 
-// Login
+
 export const login = async (req, res) => {
     try {
         const { identifier, password } = req.body;
@@ -41,7 +41,6 @@ export const login = async (req, res) => {
             });
         }
 
-        // Find user by email or phone
         const user = await User.findOne({
             $or: [{ email: identifier }, { phone: identifier }]
         });
