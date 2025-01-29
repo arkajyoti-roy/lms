@@ -32,7 +32,7 @@ const Profile = () => {
         <div className="flex flex-row items-start mt-8 gap-8">
           <div className="flex items-center space-x-4">
             <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
-              <AvatarImage src={user.photoUrl || ""} />
+              <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </div>

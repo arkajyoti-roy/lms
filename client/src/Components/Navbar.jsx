@@ -45,8 +45,8 @@ const Navbar = () => {
                 <SheetHeader>
                   <div className="flex justify-center items-center">
                     <Avatar>
-                      <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} />
-                      <AvatarFallback>CN</AvatarFallback>
+                      <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
+                      <AvatarFallback>AR</AvatarFallback>
                     </Avatar>
                   </div>
                   <SheetTitle>My Account</SheetTitle>
@@ -74,7 +74,7 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} />
+                  <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
