@@ -95,7 +95,7 @@ const Navbar = () => {
         ) : (
           <div className="flex space-x-4">
             <Button><Link to="login">Login</Link></Button>
-            <Button><Link to="signup">Signup</Link></Button>
+            <Button><Link to="login">Signup</Link></Button>
           </div>
         )}
       </div>
