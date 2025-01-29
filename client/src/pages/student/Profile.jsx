@@ -12,17 +12,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
-import { useLoadUserQuery, useLogoutUserMutation } from "@/features/api/authApi";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { userLoggedOut } from "@/features/authSlice"; // Ensure this path is correct
-
+import { useLoadUserQuery } from "@/features/api/authApi";
+// import { useNavigate } from "react-router-dom";
+// import { useDispatch } from "react-redux";
+// import { toast } from "react-toastify";
+// import { userLoggedOut } from "@/features/authSlice"; // Ensure this path is correct
+import { useUniversalLogout } from "@/utils/authUtils";
 
 const Profile = () => {
-  const dispatch = useDispatch();
-  const [logoutUser] = useLogoutUserMutation();
-  const navigate = useNavigate();
+  const handleLogout = useUniversalLogout();
+  // const dispatch = useDispatch();
+  // const [logoutUser] = useLogoutUserMutation();
+  // const navigate = useNavigate();
   const { data, isLoading, isError, error } = useLoadUserQuery();
   // const { user } = data;
   const user = data?.user;
@@ -34,17 +35,17 @@ const Profile = () => {
   if (!data) return <div>No user data found</div>;
 
 
-  const handleLogout = async () => {
-    try {
-      await logoutUser().unwrap();
-      dispatch(userLoggedOut());
-      console.log('Logout successful');
-      toast.success((user && user.message) || "Logout Successful!");
-      navigate('/'); // Redirect to home page after logout
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await logoutUser().unwrap();
+  //     dispatch(userLoggedOut());
+  //     console.log('Logout successful');
+  //     toast.success((user && user.message) || "Logout Successful!");
+  //     navigate('/'); // Redirect to home page after logout
+  //   } catch (error) {
+  //     console.error('Logout error:', error);
+  //   }
+  // };
 
 
 
