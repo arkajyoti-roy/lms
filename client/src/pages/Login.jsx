@@ -86,13 +86,13 @@ const navigate = useNavigate();
     toast.success(registerData.message || "Signup Successful!");
     setTimeout(() => {
     navigate('/');
-    }, 2000);
+    }, 1000);
   }
   if (loginIsSuccess && loginData) {
     toast.success(loginData.message || "Login Successful!");
     setTimeout(() => {
     navigate('/');
-    }, 2000);
+    }, 1000);
   }
     if (registerError) {
       const errorMessage = registerError.data?.message || registerError.message || "Signup Failed!";

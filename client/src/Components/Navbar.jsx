@@ -1,8 +1,9 @@
 import { CropIcon, MenuIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useLoadUserQuery } from "@/features/api/authApi";
-
+import { useLoadUserQuery, useLogoutUserMutation } from "@/features/api/authApi";
+import { useDispatch } from "react-redux";
+import { userLoggedOut } from "../features/authSlice"; // Ensure this path is correct
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "react-toastify";
 import {
   Sheet,
   SheetContent,
@@ -18,15 +20,33 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const { data, isLoading } = useLoadUserQuery();
-  
+  const dispatch = useDispatch();
+  const [logoutUser] = useLogoutUserMutation();
+  const navigate = useNavigate();
+
   if (isLoading) return <div>Loading...</div>;
 
   const user = data?.user;
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser().unwrap();
+      dispatch(userLoggedOut());
+      console.log('Logout successful');
+      window.location.reload();
+      toast.success((user && user.message) || "Logout Successful!");
+      console.log(user.message);
+      
+      setTimeout(() => navigate('/'), 5000);
+      // navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-[#F9FAFB] flex items-center md:justify-around md:gap-96 px-4 shadow-md fixed top-0 left-0 right-0 duration-300 justify-between z-40">
@@ -45,7 +65,7 @@ const Navbar = () => {
             {user ? (
               <>
                 <SheetHeader>
-                  <div className="flex justify-center items-center ">
+                  <div className="flex justify-center items-center">
                     <Avatar>
                       <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} />
                       <AvatarFallback>CN</AvatarFallback>
@@ -57,7 +77,7 @@ const Navbar = () => {
                     <button><Link to="my-learning">My Learning</Link></button>
                     <button>xyz</button>
                   </div>
-                  <Button>Logout</Button>
+                  <Button onClick={handleLogout}>Logout</Button>
                 </SheetHeader>
               </>
             ) : (
@@ -85,7 +105,7 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem><Link to="profile">Profile</Link></DropdownMenuItem>
                 <DropdownMenuItem><Link to="my-learning">My Learning</Link></DropdownMenuItem>
-                <DropdownMenuItem><Button>Logout</Button></DropdownMenuItem>
+                <DropdownMenuItem><Button onClick={handleLogout}>Logout</Button></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <div>
