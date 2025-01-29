@@ -14,14 +14,18 @@ import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
 import { useLoadUserQuery, useLogoutUserMutation } from "@/features/api/authApi";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { userLoggedOut } from "@/features/authSlice"; // Ensure this path is correct
 
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const [logoutUser] = useLogoutUserMutation();
   const navigate = useNavigate();
   const { data, isLoading, isError, error } = useLoadUserQuery();
   // const { user } = data;
   const user = data?.user;
-  const [logout] = useLogoutUserMutation();
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -32,13 +36,17 @@ const Profile = () => {
 
   const handleLogout = async () => {
     try {
-      await logout().unwrap();
-      // Redirect to login page or home page after logout
-      navigate("login");
-    } catch (err) {
-      console.error("Failed to logout: ", err);
+      await logoutUser().unwrap();
+      dispatch(userLoggedOut());
+      console.log('Logout successful');
+      toast.success((user && user.message) || "Logout Successful!");
+      navigate('/'); // Redirect to home page after logout
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   };
+
+
 
   return (
     <>
@@ -140,7 +148,7 @@ const Profile = () => {
                 </DialogFooter>
               </DialogContent>
             </Dialog>
-            <Button variant="danger" className="mt-3" onClick={handleLogout}>
+            <Button  className="mt-3 ml-3" onClick={handleLogout}>
               Logout
             </Button>
           </div>
