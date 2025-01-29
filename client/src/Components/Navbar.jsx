@@ -37,7 +37,12 @@ const Navbar = () => {
       <div className="block md:hidden">
         <Sheet>
           <SheetTrigger>
+            {user ? (<Avatar>
+                      <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
+                      <AvatarFallback>AR</AvatarFallback>
+                    </Avatar>) :
             <MenuIcon size={"30"} />
+          }
           </SheetTrigger>
           <SheetContent>
             {user ? (
