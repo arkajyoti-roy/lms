@@ -81,9 +81,9 @@ const Navbar = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem><Link to="profile">Profile</Link></DropdownMenuItem>
-                <DropdownMenuItem><Link to="my-learning">My Learning</Link></DropdownMenuItem>
-                <DropdownMenuItem><Button onClick={handleLogout}>Logout</Button></DropdownMenuItem>
+                <DropdownMenuItem><Link to="profile"><button className="text-left" style={{width: "100px"}}>Profile</button></Link></DropdownMenuItem>
+                <DropdownMenuItem><Link to="my-learning"><button className="text-left" style={{width: "100px"}}>My Learning</button></Link></DropdownMenuItem>
+                <DropdownMenuItem><Button style={{width: "100px"}} onClick={handleLogout}>Logout</Button></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <div>
