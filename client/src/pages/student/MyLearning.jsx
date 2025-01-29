@@ -4,7 +4,8 @@ import { useLoadUserQuery } from "@/features/api/authApi";
 const MyLearning = () => {
   const { data, isLoading } = useLoadUserQuery();
   const user = data?.user || {};
-  const enrolledCourses = user.enrolledCourses || [];
+  const enrolledCourses = user.enrolledCourses || [1,2,4,6];
+  // const enrolledCourses = user.enrolledCourses || [1,2,4,6];
 
   return (
     <section className="text-gray-600 body-font">

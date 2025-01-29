@@ -20,7 +20,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 // signup and login routes
 app.use('/api/v1/user', userRoute);
 
