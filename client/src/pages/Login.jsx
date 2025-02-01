@@ -22,8 +22,6 @@ import "react-toastify/dist/ReactToastify.css";
 const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(initialTab);
-
   const initialTab = location.state?.tab || "signup";
   const [signup, setSignup] = useState({
     name: "",
@@ -56,6 +54,7 @@ const Login = () => {
     },
   ] = useLoginUserMutation();
 
+  const [activeTab, setActiveTab] = useState(initialTab);
 
   const handleInputChange = (e, type) => {
     const { name, value } = e.target;
