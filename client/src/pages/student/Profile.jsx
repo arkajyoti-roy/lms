@@ -14,28 +14,16 @@ import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
 import { useUniversalLogout } from "@/utils/authUtils";
 import { useUserDetails } from "@/utils/useUserDetails";
-// import { useUpdateUserMutation } from "@/features/api/authApi";
-import {  useState } from "react";
+import { useLoadUserQuery } from "@/features/api/authApi";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-
-
-
 
 const Profile = () => {
   const [name, setName] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null); // Initialize as null
 
-  // const [
-  //   updateUser,
-  //   {
-  //     data: updateUserData,
-  //     isSuccess,
-  //     isLoading: updateUserIsLoading,
-  //     error: updateUserError,
-  //     isError: updateUserIsError,
-  //   },
-  // ] = useUpdateUserMutation();
+  const { data: loadUserData, refetch: refetchUserData } = useLoadUserQuery();
 
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0]; // Corrected to 'files'
@@ -57,44 +45,51 @@ const Profile = () => {
   //   await updateUser(inputData);
   // };
 
+  // --------------------------------------------------
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isLD, setIsLD] = useState(false);
 
-// --------------------------------------------------
-const [isDialogOpen, setIsDialogOpen] = useState(true);
-const [isLD , setIsLD] = useState(false);
+  const updateUserHandle = async (e) => {
+    e.preventDefault();
+    setIsLD(true);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("profilePhoto", profilePhoto);
 
-const updateUserHandle = async (e) => {
-  e.preventDefault();
-  setIsLD(true);
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("profilePhoto", profilePhoto);
+    try {
+      const response = await axios.put(
+        "http://localhost:8081/api/v1/user/profile/update",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true, // Enable sending cookies with the request
+        }
+      );
+      // loadUserData();
+      // useEffect(()=>{
 
-  try {
-    const response = await axios.put("http://localhost:8081/api/v1/user/profile/update", formData, {
-      headers: { 
-        "Content-Type": "multipart/form-data"
-      },
-      withCredentials: true // Enable sending cookies with the request
-    });
-    setIsDialogOpen(false);
-    console.log("Success:", response.data);
-    toast.success("Profile updated successfully!");
-  } catch (error) {
+      // }, )
+      setIsDialogOpen(false);
+      console.log("Success:", response.data);
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      setIsDialogOpen(true);
+      console.error("Upload Error:", error);
+      toast.error("Upload failed!");
+    } finally {
+      refetchUserData();
+
+      setIsLD(false); // Reset loading state
+    }
+  };
+
+  // ------------------------------------------------------
+
+  const openDialog = () => {
     setIsDialogOpen(true);
-    console.error("Upload Error:", error);
-    toast.error("Upload failed!");
-  }finally {
-    setIsLD(false); // Reset loading state
-  }
-};
-
-
-
-// ------------------------------------------------------
-
-
-
-
+  };
 
   // useEffect(() => {
   //   if (isSuccess) {
@@ -146,7 +141,7 @@ const updateUserHandle = async (e) => {
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="" className="mt-3">
+                <Button variant="" onClick={openDialog} className="mt-3">
                   Edit Profile
                 </Button>
               </DialogTrigger>
@@ -154,8 +149,8 @@ const updateUserHandle = async (e) => {
                 <DialogHeader>
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when
-                    you're done.
+                    Make changes to your profile here. Click save when you're
+                    done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -166,8 +161,23 @@ const updateUserHandle = async (e) => {
                     <Input
                       type="text"
                       id="name"
-                      value={name}
+                      defaultValue={user.name} // Set default value to user name
+                      value={name} // Controlled input with value set to state
                       onChange={(e) => setName(e.target.value)}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Email
+                    </Label>
+                    <Input
+                      type="text"
+                      id="name"
+                      defaultValue={user.name}
+                      // defaultValue={}
+                      // value={name}
+                      // onChange={(e) => setName(e.target.value)}
                       className="col-span-3"
                     />
                   </div>
