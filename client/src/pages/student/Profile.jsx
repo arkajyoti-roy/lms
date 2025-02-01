@@ -167,20 +167,7 @@ const Profile = () => {
                       className="col-span-3"
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Email
-                    </Label>
-                    <Input
-                      type="text"
-                      id="name"
-                      defaultValue={user.name}
-                      // defaultValue={}
-                      // value={name}
-                      // onChange={(e) => setName(e.target.value)}
-                      className="col-span-3"
-                    />
-                  </div>
+                  
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="photoUrl" className="text-right">
                       Image
