@@ -38,8 +38,8 @@ const Navbar = () => {
         <Sheet>
           <SheetTrigger>
             {user ? (<Avatar>
-                      <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
-                      <AvatarFallback>AR</AvatarFallback>
+                      <AvatarImage src={user.photoUrl || ""} />
+                      <AvatarFallback>{user.name ? user.name.charAt(0) : "&"}</AvatarFallback>
                     </Avatar>) :
             <MenuIcon size={"30"} />
           }
@@ -50,8 +50,8 @@ const Navbar = () => {
                 <SheetHeader>
                   <div className="flex justify-center items-center">
                     <Avatar>
-                      <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
-                      <AvatarFallback>AR</AvatarFallback>
+                      <AvatarImage src={user.photoUrl || ""} />
+                      <AvatarFallback>{user.name ? user.name.charAt(0) : "&"}</AvatarFallback>
                     </Avatar>
                   </div>
                   <SheetTitle>My Account</SheetTitle>
@@ -79,8 +79,8 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
-                  <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage src={user.photoUrl || ""} />
+                  <AvatarFallback>{user.name ? user.name.charAt(0) : "&"}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>

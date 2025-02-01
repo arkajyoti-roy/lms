@@ -115,7 +115,7 @@ const Profile = () => {
           <div className="flex items-center space-x-4">
             <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
               <AvatarImage src={user.photoUrl || ""} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback>{user.name ? user.name.charAt(0) : ""}</AvatarFallback>
             </Avatar>
           </div>
           <div>
