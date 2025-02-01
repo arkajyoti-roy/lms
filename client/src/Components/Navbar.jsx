@@ -28,12 +28,23 @@ const navigate = useNavigate();
 
 
   if (isLoading) return <div>Loading...</div>;
+
+
+
+  
   const handleLoginClick = () => {
-    navigate('/login', { state: { tab: 'login' } }); // Pass state to control the tab
+    navigate("/login", { state: { tab: "login" } }); // Pass state to control the tab
   };
   const handleSignupClick = () => {
     navigate('/login', { state: { tab: 'signup' } }); // Pass state to control the tab
+    
   };
+  // const handleButtonClick = () => {
+  //   navigate('/nextPage'); // Navigate to the next page
+  //   setTimeout(() => {
+  //     document.querySelector('#signup').click(); // Simulate click on the signup button
+  //   }, 0);
+  // };
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-[#F9FAFB] flex items-center md:justify-around md:gap-96 px-4 shadow-md fixed top-0 left-0 right-0 duration-300 justify-between z-40">
       <Link to="/">
