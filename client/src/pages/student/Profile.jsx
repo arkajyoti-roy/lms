@@ -13,16 +13,103 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import MyLearning from "./MyLearning";
 import { useUniversalLogout } from "@/utils/authUtils";
-import { useUserDetails } from "@/utils/useUserDetails"; // Corrected import statement
+import { useUserDetails } from "@/utils/useUserDetails";
+// import { useUpdateUserMutation } from "@/features/api/authApi";
+import {  useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
+
+
+
 
 const Profile = () => {
+  const [name, setName] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(null); // Initialize as null
+
+  // const [
+  //   updateUser,
+  //   {
+  //     data: updateUserData,
+  //     isSuccess,
+  //     isLoading: updateUserIsLoading,
+  //     error: updateUserError,
+  //     isError: updateUserIsError,
+  //   },
+  // ] = useUpdateUserMutation();
+
+  const onChangeHandler = (e) => {
+    const file = e.target.files?.[0]; // Corrected to 'files'
+    if (file) {
+      if (file.size > 10485760) {
+        // 10MB in bytes
+        alert("File size exceeds 10MB. Please upload a smaller file.");
+        return;
+      }
+      setProfilePhoto(file);
+    }
+  };
+
+  // const updateUserHandle = async () => {
+  //   // Trigger the update mutation
+  //   const inputData = new FormData();
+  //   inputData.append("name", name);
+  //   inputData.append("profilePhoto", profilePhoto);
+  //   await updateUser(inputData);
+  // };
+
+
+// --------------------------------------------------
+const [isDialogOpen, setIsDialogOpen] = useState(true);
+const [isLD , setIsLD] = useState(false);
+
+const updateUserHandle = async (e) => {
+  e.preventDefault();
+  setIsLD(true);
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("profilePhoto", profilePhoto);
+
+  try {
+    const response = await axios.put("http://localhost:8081/api/v1/user/profile/update", formData, {
+      headers: { 
+        "Content-Type": "multipart/form-data"
+      },
+      withCredentials: true // Enable sending cookies with the request
+    });
+    setIsDialogOpen(false);
+    console.log("Success:", response.data);
+    toast.success("Profile updated successfully!");
+  } catch (error) {
+    setIsDialogOpen(true);
+    console.error("Upload Error:", error);
+    toast.error("Upload failed!");
+  }finally {
+    setIsLD(false); // Reset loading state
+  }
+};
+
+
+
+// ------------------------------------------------------
+
+
+
+
+
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     toast.success(updateUserData.message || "Profile updated successfully");
+  //   }
+  //   if (updateUserIsError) {
+  //     toast.error(updateUserError?.data?.message || "Error updating profile");
+  //   }
+  // }, [updateUserError, updateUserData, isSuccess, updateUserIsError]);
+
   const handleLogout = useUniversalLogout();
   const { user, isLoading, isError, error } = useUserDetails();
 
   if (isLoading) return <div>Loading...</div>;
-
   if (isError) return <div>Error: {error.message}</div>;
-
   if (!user) return <div>No user data found</div>;
 
   return (
@@ -32,7 +119,7 @@ const Profile = () => {
         <div className="flex flex-row items-start mt-8 gap-8">
           <div className="flex items-center space-x-4">
             <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
-              <AvatarImage src={user.photoUrl || "https://tcea.campusjadugar.com/uploads/student_profile_pic/1733916387_1229631424_24304013005.jpg"} />
+              <AvatarImage src={user.photoUrl || ""} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </div>
@@ -57,7 +144,7 @@ const Profile = () => {
                 </span>
               </label>
             </div>
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="" className="mt-3">
                   Edit Profile
@@ -68,7 +155,7 @@ const Profile = () => {
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
                     Make changes to your profile here. Click save when
-                    you&apos;re done.
+                    you're done.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -77,38 +164,10 @@ const Profile = () => {
                       Name
                     </Label>
                     <Input
+                      type="text"
                       id="name"
-                      defaultValue={user.name}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      defaultValue={user.email}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="password" className="text-right">
-                      Password
-                    </Label>
-                    <Input
-                      id="password"
-                      defaultValue={user.password}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="phone" className="text-right">
-                      Phone
-                    </Label>
-                    <Input
-                      id="phone"
-                      defaultValue={user.phone}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       className="col-span-3"
                     />
                   </div>
@@ -118,14 +177,17 @@ const Profile = () => {
                     </Label>
                     <Input
                       type="file"
-                      multiple
+                      id="photoUrl"
+                      onChange={onChangeHandler}
+                      accept="image/*"
                       className="col-span-3"
-                      defaultValue={user.photoUrl || ""}
                     />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Save changes</Button>
+                  <Button onClick={updateUserHandle} disabled={isLD}>
+                    {isLD ? "Saving..." : "Save changes"}
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -135,7 +197,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <div className="" style={{ marginTop: "-190px" }}>
+      <div style={{ marginTop: "-190px" }}>
         <MyLearning />
       </div>
     </>

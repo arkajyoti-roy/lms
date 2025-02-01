@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { userLoggedIn } from '../authSlice';
 // import { l } from 'vite/dist/node/types.d-aGj9QkWt';
 
-const base_url = 'http://localhost:8080/api/v1/user/';
+const base_url = 'http://localhost:8081/api/v1/user/';
 
 export const authApi = createApi({
     reducerPath: 'authApi',
@@ -48,10 +48,22 @@ export const authApi = createApi({
             }),
         }),
         loadUser: builder.query({
-            query: () => ({url: 'profile', 
-                method: 'GET'})
+            query: () => ({
+                url: 'profile',
+                method: 'GET'
+            })
+        }),
+        updateUser: builder.mutation({
+            query: (inputData) => {
+                return {
+                    url: 'profile/update',
+                    method: 'PUT',
+                    body: inputData,
+
+                }
+            },
         }),
     }),
 });
 
-export const { useLogoutUserMutation ,useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery } = authApi;
+export const { useUpdateUserMutation, useLogoutUserMutation, useRegisterUserMutation, useLoginUserMutation, useLoadUserQuery } = authApi;
