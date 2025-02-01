@@ -19,13 +19,21 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const { user, isLoading } = useUserDetails();
   const handleLogout = useUniversalLogout(); // Ensure the hook is always called at the top level
 
-  if (isLoading) return <div>Loading...</div>;
+const navigate = useNavigate();
 
+
+  if (isLoading) return <div>Loading...</div>;
+  const handleLoginClick = () => {
+    navigate('/login', { state: { tab: 'login' } }); // Pass state to control the tab
+  };
+  const handleSignupClick = () => {
+    navigate('/login', { state: { tab: 'signup' } }); // Pass state to control the tab
+  };
   return (
     <div className="h-16 dark:bg-[#0A0A0A] bg-[#F9FAFB] flex items-center md:justify-around md:gap-96 px-4 shadow-md fixed top-0 left-0 right-0 duration-300 justify-between z-40">
       <Link to="/">
@@ -65,8 +73,10 @@ const Navbar = () => {
               </>
             ) : (
               <div className="flex flex-col space-y-4 mt-8">
-                <Button><Link to="login">Login</Link></Button>
-                <Button><Link to="login">Signup</Link></Button>
+                 <Button onClick={handleLoginClick}>Login</Button>
+                 <Button onClick={handleSignupClick}>Signup</Button>
+                {/* <Button><Link to="login">Login</Link></Button>
+                <Button><Link to="login">Signup</Link></Button> */}
               </div>
             )}
           </SheetContent>
@@ -97,8 +107,10 @@ const Navbar = () => {
           </>
         ) : (
           <div className="flex space-x-4">
-            <Button><Link to="login">Login</Link></Button>
-            <Button><Link to="login">Signup</Link></Button>
+            <Button onClick={handleLoginClick}>Login</Button>
+            <Button onClick={handleSignupClick}>Signup</Button>
+            {/* <Button><Link to="login">Login</Link></Button>
+            <Button><Link to="login">Signup</Link></Button> */}
           </div>
         )}
       </div>

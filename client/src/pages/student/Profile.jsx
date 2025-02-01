@@ -20,10 +20,12 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 const Profile = () => {
-  const [name, setName] = useState("");
+  const { user, isLoading, isError, error } = useUserDetails();
+
+  const [name, setName] = useState(user?.name || "");
   const [profilePhoto, setProfilePhoto] = useState(null); // Initialize as null
 
-  const { data: loadUserData, refetch: refetchUserData } = useLoadUserQuery();
+  const { refetch: refetchUserData } = useLoadUserQuery();
 
   const onChangeHandler = (e) => {
     const file = e.target.files?.[0]; // Corrected to 'files'
@@ -101,12 +103,15 @@ const Profile = () => {
   // }, [updateUserError, updateUserData, isSuccess, updateUserIsError]);
 
   const handleLogout = useUniversalLogout();
-  const { user, isLoading, isError, error } = useUserDetails();
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error: {error.message}</div>;
   if (!user) return <div>No user data found</div>;
 
+
+
+
+  
   return (
     <>
       <div className="max-w-4xl mx-auto my-24">
@@ -149,7 +154,7 @@ const Profile = () => {
                 <DialogHeader>
                   <DialogTitle>Edit profile</DialogTitle>
                   <DialogDescription>
-                    Make changes to your profile here. Click save when you're
+                    Make changes to your profile here. Click save when you&apos;re
                     done.
                   </DialogDescription>
                 </DialogHeader>
@@ -161,8 +166,7 @@ const Profile = () => {
                     <Input
                       type="text"
                       id="name"
-                      defaultValue={user.name} // Set default value to user name
-                      value={name} // Controlled input with value set to state
+                      value={name || user.name} // Controlled input with value set to state or user name
                       onChange={(e) => setName(e.target.value)}
                       className="col-span-3"
                     />
