@@ -1,7 +1,17 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
+import { v2 as cloudinary } from 'cloudinary'
+import dotenv from 'dotenv'
 import { generateToken } from '../utils/generateToken.js';
+import {uploadMedia, deleteMedia} from '../utils/cloudinary.js'
 
+dotenv.config();
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+});
 
 export const signup = async (req, res) => {
     try {
@@ -98,14 +108,56 @@ export const getUserProfile = async (req, res) => {
             });
         }
 
-
         return res.status(200).json({ user, success: true });
-
-
 
     } catch (error) {
         console.error('Get User Profile Error:', error);
         console.log('Get User Profile Error:', error);
         res.status(500).json({ message: 'Server error during fetching user profile' });
+    }
+};
+
+
+export const updateUserProfile = async (req, res) => {
+    try {
+        const userId = req.id;
+        const { name } = req.body;
+        const profilePhoto = req.file ? req.file.path : null;
+
+        console.log('Profile Photo:', profilePhoto); // Debugging line
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found',
+                success: false,
+            });
+        }
+
+        if (user.photoUrl) {
+            const publicId = user.photoUrl.split('/').pop().split('.')[0];
+            await deleteMedia(publicId); // Ensure the correct function is called
+        }
+
+        let photoUrl = user.photoUrl;
+        if (profilePhoto) {
+            const cloudResponse = await uploadMedia(profilePhoto); // Ensure the correct function is called
+            console.log('Cloud Response:', cloudResponse); // Debugging line
+            if (cloudResponse && cloudResponse.secure_url) {
+                photoUrl = cloudResponse.secure_url;
+            } else {
+                return res.status(500).json({ message: 'Error uploading profile photo' });
+            }
+        }
+
+        const updatedData = { name, photoUrl };
+
+        const updatedUser = await User.findByIdAndUpdate(userId, updatedData, { new: true }).select('-password');
+
+        return res.status(200).json({ user: updatedUser, success: true, message: 'Profile updated successfully' });
+    } catch (error) {
+        console.error('Update User Profile Error:', error);
+        res.status(500).json({ message: 'Server error during updating user profile' });
     }
 };
