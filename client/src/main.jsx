@@ -7,12 +7,14 @@ import {appStore} from "./app/store.js";
 import { ToastContainer } from "react-toastify";
 
 
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={appStore}>
+   
       <App />
+    
       <ToastContainer />
+      
     </Provider>
   </React.StrictMode>
 );

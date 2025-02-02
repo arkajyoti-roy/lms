@@ -18,6 +18,7 @@ import { useLoadUserQuery } from "@/features/api/authApi";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 
 const Profile = () => {
   const { user, isLoading, isError, error } = useUserDetails();
@@ -187,7 +188,9 @@ const Profile = () => {
                 </div>
                 <DialogFooter>
                   <Button onClick={updateUserHandle} disabled={isLD}>
-                    {isLD ? "Saving..." : "Save changes"}
+                    {isLD ?  <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin"/> Saving...
+                    </> : "Save changes"}
                   </Button>
                 </DialogFooter>
               </DialogContent>

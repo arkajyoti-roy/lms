@@ -3,9 +3,13 @@ import dotenv from 'dotenv';
 import express from 'express';
 import connectDB from './db/db.js';
 import userRoute from './routes/user.route.js';
+import courseRoute from './routes/course.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+
+
+
 
 dotenv.config();
 connectDB();
@@ -35,6 +39,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/v1/user', userRoute);
+app.use('/api/v1/course', courseRoute);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
