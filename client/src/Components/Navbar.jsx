@@ -75,9 +75,19 @@ const navigate = useNavigate();
                   </div>
                   <SheetTitle>My Account</SheetTitle>
                   <div className="flex flex-col space-y-1 justify-start items-start text-2xl font-semibold">
+                    {user?.role === "student" ?(
+                      <>
                     <button><Link to="profile">Profile</Link></button>
                     <button><Link to="my-learning">My Learning</Link></button>
-                    <button>xyz</button>
+                    </>  ): <>
+                    
+                    <button><Link to="profile">Profile</Link></button>
+                    <button><Link to="admin/dashboard">Dashboard</Link></button>
+                    <button><Link to="admin/course">Course</Link></button>
+                    </>
+
+                  }
+                    {/* <button>xyz</button> */}
                   </div>
                   <Button onClick={handleLogout}>Logout</Button>
                 </SheetHeader>
@@ -107,8 +117,21 @@ const navigate = useNavigate();
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {user?.role === "student" ?( <>
                 <DropdownMenuItem><Link to="profile"><button className="text-left" style={{width: "100px"}}>Profile</button></Link></DropdownMenuItem>
                 <DropdownMenuItem><Link to="my-learning"><button className="text-left" style={{width: "100px"}}>My Learning</button></Link></DropdownMenuItem>
+                </>) : <>
+                
+                <DropdownMenuItem><Link to="profile"><button className="text-left" style={{width: "100px"}}>Profile</button></Link></DropdownMenuItem>
+                <DropdownMenuItem><Link to="admin/dashboard"><button className="text-left" style={{width: "100px"}}>Dashboard</button></Link></DropdownMenuItem>
+                <DropdownMenuItem><Link to="admin/course"><button className="text-left" style={{width: "100px"}}>Course</button></Link></DropdownMenuItem>
+                </>
+                
+              
+              }
+               
+               
+               
                 <DropdownMenuItem><Button style={{width: "100px"}} onClick={handleLogout}>Logout</Button></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

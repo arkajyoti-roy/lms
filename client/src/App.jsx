@@ -6,11 +6,10 @@ import Courses from "./pages/student/Courses";
 import MyLearning from "./pages/student/MyLearning";
 import Profile from "./pages/student/Profile";
 import Slidebar from "./pages/Admin/Sidebar.jsx";
-// import Dashboard from "./pages/Admin/Dashboard";
-// import AddCourse from "./pages/Admin/course/AddCourse";
 import CourseTable from "./pages/Admin/course/CourseTable";
 import Dashboard from "./pages/Admin/Dashboard";
 import AddCourse from "./pages/Admin/course/AddCourse";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const appRouter = createBrowserRouter([
   {
@@ -27,39 +26,51 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/courses",
-        element: <Courses />,
+        element: (
+          <ProtectedRoute allowedRoles={["student"]}>
+            <Courses />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <ProtectedRoute allowedRoles={["student"]}>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/my-learning",
-        element: <MyLearning />,
+        element: (
+          <ProtectedRoute allowedRoles={["student"]}>
+            <MyLearning />
+          </ProtectedRoute>
+        ),
       },
 
-      // Admin____________________________----------------------
-
+      // Admin Routes
       {
         path: "admin",
-        element: <Slidebar />,
-        children:[
+        element: (
+          <ProtectedRoute allowedRoles={["instructor"]}>
+            <Slidebar />
+          </ProtectedRoute>
+        ),
+        children: [
           {
             path: "dashboard",
-            element: <Dashboard />
+            element: <Dashboard />,
           },
           {
             path: "course",
-            element: <CourseTable />
-           
-          }
-          ,
+            element: <CourseTable />,
+          },
           {
             path: "course/create",
-            element: <AddCourse />
-           
-          }
-        ]
+            element: <AddCourse />,
+          },
+        ],
       },
     ],
   },
@@ -69,8 +80,6 @@ const App = () => {
   return (
     <main>
       <RouterProvider router={appRouter} />
-
-      {/* <CourseTable /> */}
     </main>
   );
 };

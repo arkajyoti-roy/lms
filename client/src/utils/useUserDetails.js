@@ -6,3 +6,5 @@ export const useUserDetails = () => {
 
   return { user, isLoading, isError, error };
 };
+
+

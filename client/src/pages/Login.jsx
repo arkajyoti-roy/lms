@@ -96,13 +96,11 @@ const Login = () => {
       }
     }
   };
-
   useEffect(() => {
     if (registerIsSuccess && registerData) {
       toast.success(registerData.message || "Signup Successful!");
       setTimeout(() => {
-        // Redirect based on user role after signup
-        if (registerData.user.role === "instructor") {
+        if (signup.role === "instructor") {
           navigate("/admin/dashboard");
         } else {
           navigate("/");
@@ -112,7 +110,6 @@ const Login = () => {
     if (loginIsSuccess && loginData) {
       toast.success(loginData.message || "Login Successful!");
       setTimeout(() => {
-        // Redirect based on user role after login
         if (loginData.user.role === "instructor") {
           navigate("/admin/dashboard");
         } else {
@@ -141,7 +138,9 @@ const Login = () => {
     registerError,
     loginIsSuccess,
     registerIsSuccess,
+    navigate,
   ]);
+  
 
   return (
     <>
