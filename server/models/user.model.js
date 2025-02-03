@@ -22,7 +22,8 @@ password: {
 role:{
     type: String,
     enum: ['student', 'instructor'],
-    default: 'student'
+    default: 'student',
+    required: true,
 },
 enrolledCourses: [{
     type: mongoose.Schema.Types.ObjectId,

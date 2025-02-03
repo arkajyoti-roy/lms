@@ -13,9 +13,10 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 });
 
+
 export const signup = async (req, res) => {
     try {
-        const { name, email, phone, password } = req.body;
+        const { name, email, phone, password, role } = req.body;
 
         // Check if user already exists by email or phone number
         const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
@@ -27,18 +28,28 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create new user
-        const newUser = new User({ name, email, phone, password: hashedPassword });
+        const newUser = new User({ name, email, phone, password: hashedPassword, role });
         await newUser.save();
 
+        const userResponse = {
+            id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            phone: newUser.phone,
+            role: newUser.role, // Ensure the role is included in the response
+        };
 
         const token = generateToken(res, newUser);
 
-        res.status(201).json({ token, message: 'User created and logged in successfully', user: newUser });
+        res.status(201).json({ token, message: 'User created and logged in successfully', user: userResponse });
     } catch (error) {
         console.error('Signup Error:', error);
-        res.status(500).json({ message: 'Server error during signup' });
+        if (!res.headersSent) {
+            res.status(500).json({ message: 'Server error during signup' });
+        }
     }
 };
+
 
 
 export const login = async (req, res) => {

@@ -11,9 +11,20 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+// import { Select } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // import { useLoginMutation, useSignupMutation } from "@/features/api/authApi.js";
-import { useRegisterUserMutation, useLoginUserMutation } from '../features/api/authApi';
+import {
+  useRegisterUserMutation,
+  useLoginUserMutation,
+} from "../features/api/authApi";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -65,57 +76,87 @@ const Login = () => {
     }
   };
 
+  const handleSelectChange = (value) => {
+    setSignup((prevState) => ({ ...prevState, role: value }));
+  };
+
   const handleSubmit = async (type) => {
     const inputData = type === "signup" ? signup : login;
     const action = type === "signup" ? registerUser : loginUser;
-  
-    console.log('Submitting data:', inputData);  // Log the request payload
-  
+
+    console.log("Submitting data:", inputData); // Log the request payload
+
     try {
       const result = await action(inputData).unwrap();
       console.log(`${type} successful:`, result);
     } catch (err) {
-      console.error('Error during submission:', err);
+      console.error("Error during submission:", err);
       if (err.data) {
-        console.error('Server response data:', err.data);
+        console.error("Server response data:", err.data);
       }
     }
   };
-  
+
   useEffect(() => {
     if (registerIsSuccess && registerData) {
       toast.success(registerData.message || "Signup Successful!");
       setTimeout(() => {
-        navigate('/');
+        // Redirect based on user role after signup
+        if (registerData.user.role === "instructor") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       }, 1000);
     }
     if (loginIsSuccess && loginData) {
       toast.success(loginData.message || "Login Successful!");
       setTimeout(() => {
-        navigate('/');
+        // Redirect based on user role after login
+        if (loginData.user.role === "instructor") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       }, 1000);
     }
     if (registerError) {
-      const errorMessage = registerError.data?.message || registerError.message || "Signup Failed!";
+      const errorMessage =
+        registerError.data?.message ||
+        registerError.message ||
+        "Signup Failed!";
       toast.error(errorMessage);
     }
-    if (loginError) { 
-      const errorMessage = loginError.data?.message || loginError.message || "Login Failed!";
+    if (loginError) {
+      const errorMessage =
+        loginError.data?.message || loginError.message || "Login Failed!";
       toast.error(errorMessage);
     }
-  
-  },[loginIsLoading, registerIsLoading, loginData, registerData, loginError, registerError, loginIsSuccess, registerIsSuccess]);
+  }, [
+    loginIsLoading,
+    registerIsLoading,
+    loginData,
+    registerData,
+    loginError,
+    registerError,
+    loginIsSuccess,
+    registerIsSuccess,
+  ]);
 
   return (
     <>
       <br />
       <div className="flex justify-center w-full pt-12">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[400px]">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-[400px]"
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signup">Signup</TabsTrigger>
             <TabsTrigger value="login">Login</TabsTrigger>
           </TabsList>
-        
+
           <TabsContent value="signup">
             <Card>
               <CardHeader>
@@ -167,27 +208,40 @@ const Login = () => {
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="role">Role</Label>
-                  <Input
-                    type="text"
+                  <Select
                     name="role"
-                    onChange={(e) => handleInputChange(e, "signup")}
-                    defaultValue="student"
+                    value={signup.role}
+                    onValueChange={handleSelectChange}
                     required
-                  />
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue disabled placeholder="Role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="instructor">Instructor</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </CardContent>
               <CardFooter>
-                <Button disabled={registerIsLoading} onClick={() => handleSubmit("signup")}>
+                <Button
+                  disabled={registerIsLoading}
+                  onClick={() => handleSubmit("signup")}
+                >
                   {registerIsLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin"/> Please wait...
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
+                      wait...
                     </>
-                  ) : "Signup"}
+                  ) : (
+                    "Signup"
+                  )}
                 </Button>
               </CardFooter>
             </Card>
           </TabsContent>
-        
+
           <TabsContent value="login">
             <Card>
               <CardHeader>
@@ -219,12 +273,18 @@ const Login = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button disabled={loginIsLoading} onClick={() => handleSubmit("login")}>
+                <Button
+                  disabled={loginIsLoading}
+                  onClick={() => handleSubmit("login")}
+                >
                   {loginIsLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin"/>Please wait...
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait...
                     </>
-                  ) : "Login"}
+                  ) : (
+                    "Login"
+                  )}
                 </Button>
               </CardFooter>
             </Card>
