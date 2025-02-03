@@ -24,20 +24,15 @@ const Navbar = () => {
   const { user, isLoading } = useUserDetails();
   const handleLogout = useUniversalLogout(); // Ensure the hook is always called at the top level
 
-const navigate = useNavigate();
-
+  const navigate = useNavigate();
 
   if (isLoading) return <div>Loading...</div>;
 
-
-
-  
   const handleLoginClick = () => {
     navigate("/login", { state: { tab: "login" } }); // Pass state to control the tab
   };
   const handleSignupClick = () => {
-    navigate('/login', { state: { tab: 'signup' } }); // Pass state to control the tab
-    
+    navigate("/login", { state: { tab: "signup" } }); // Pass state to control the tab
   };
   // const handleButtonClick = () => {
   //   navigate('/nextPage'); // Navigate to the next page
@@ -56,12 +51,16 @@ const navigate = useNavigate();
       <div className="block md:hidden">
         <Sheet>
           <SheetTrigger>
-            {user ? (<Avatar>
-                      <AvatarImage src={user.photoUrl || ""} />
-                      <AvatarFallback>{user.name ? user.name.charAt(0) : "&"}</AvatarFallback>
-                    </Avatar>) :
-            <MenuIcon size={"30"} />
-          }
+            {user ? (
+              <Avatar>
+                <AvatarImage src={user.photoUrl || ""} />
+                <AvatarFallback>
+                  {user.name ? user.name.charAt(0) : "&"}
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <MenuIcon size={"30"} />
+            )}
           </SheetTrigger>
           <SheetContent>
             {user ? (
@@ -70,23 +69,35 @@ const navigate = useNavigate();
                   <div className="flex justify-center items-center">
                     <Avatar>
                       <AvatarImage src={user.photoUrl || ""} />
-                      <AvatarFallback>{user.name ? user.name.charAt(0) : "&"}</AvatarFallback>
+                      <AvatarFallback>
+                        {user.name ? user.name.charAt(0) : "&"}
+                      </AvatarFallback>
                     </Avatar>
                   </div>
                   <SheetTitle>My Account</SheetTitle>
                   <div className="flex flex-col space-y-1 justify-start items-start text-2xl font-semibold">
-                    {user?.role === "student" ?(
+                    {user?.role === "student" ? (
                       <>
-                    <button><Link to="profile">Profile</Link></button>
-                    <button><Link to="my-learning">My Learning</Link></button>
-                    </>  ): <>
-                    
-                    <button><Link to="profile">Profile</Link></button>
-                    <button><Link to="admin/dashboard">Dashboard</Link></button>
-                    <button><Link to="admin/course">Course</Link></button>
-                    </>
-
-                  }
+                        <button>
+                          <Link to="profile">Profile</Link>
+                        </button>
+                        <button>
+                          <Link to="my-learning">My Learning</Link>
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button>
+                          <Link to="profile">Profile</Link>
+                        </button>
+                        <button>
+                          <Link to="admin/dashboard">Dashboard</Link>
+                        </button>
+                        <button>
+                          <Link to="admin/course">Course</Link>
+                        </button>
+                      </>
+                    )}
                     {/* <button>xyz</button> */}
                   </div>
                   <Button onClick={handleLogout}>Logout</Button>
@@ -94,8 +105,8 @@ const navigate = useNavigate();
               </>
             ) : (
               <div className="flex flex-col space-y-4 mt-8">
-                 <Button onClick={handleLoginClick}>Login</Button>
-                 <Button onClick={handleSignupClick}>Signup</Button>
+                <Button onClick={handleLoginClick}>Login</Button>
+                <Button onClick={handleSignupClick}>Signup</Button>
                 {/* <Button><Link to="login">Login</Link></Button>
                 <Button><Link to="login">Signup</Link></Button> */}
               </div>
@@ -111,28 +122,77 @@ const navigate = useNavigate();
               <DropdownMenuTrigger>
                 <Avatar>
                   <AvatarImage src={user.photoUrl || ""} />
-                  <AvatarFallback>{user.name ? user.name.charAt(0) : "&"}</AvatarFallback>
+                  <AvatarFallback>
+                    {user.name ? user.name.charAt(0) : "&"}
+                  </AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {user?.role === "student" ?( <>
-                <DropdownMenuItem><Link to="profile"><button className="text-left" style={{width: "100px"}}>Profile</button></Link></DropdownMenuItem>
-                <DropdownMenuItem><Link to="my-learning"><button className="text-left" style={{width: "100px"}}>My Learning</button></Link></DropdownMenuItem>
-                </>) : <>
-                
-                <DropdownMenuItem><Link to="profile"><button className="text-left" style={{width: "100px"}}>Profile</button></Link></DropdownMenuItem>
-                <DropdownMenuItem><Link to="admin/dashboard"><button className="text-left" style={{width: "100px"}}>Dashboard</button></Link></DropdownMenuItem>
-                <DropdownMenuItem><Link to="admin/course"><button className="text-left" style={{width: "100px"}}>Course</button></Link></DropdownMenuItem>
-                </>
-                
-              
-              }
-               
-               
-               
-                <DropdownMenuItem><Button style={{width: "100px"}} onClick={handleLogout}>Logout</Button></DropdownMenuItem>
+                {user?.role === "student" ? (
+                  <>
+                    <DropdownMenuItem>
+                      <Link to="profile">
+                        <button
+                          className="text-left"
+                          style={{ width: "100px" }}
+                        >
+                          Profile
+                        </button>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="my-learning">
+                        <button
+                          className="text-left"
+                          style={{ width: "100px" }}
+                        >
+                          My Learning
+                        </button>
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem>
+                      <Link to="profile">
+                        <button
+                          className="text-left"
+                          style={{ width: "100px" }}
+                        >
+                          Profile
+                        </button>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="admin/dashboard">
+                        <button
+                          className="text-left"
+                          style={{ width: "100px" }}
+                        >
+                          Dashboard
+                        </button>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="admin/course">
+                        <button
+                          className="text-left"
+                          style={{ width: "100px" }}
+                        >
+                          Course
+                        </button>
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+
+                <DropdownMenuItem>
+                  <Button style={{ width: "100px" }} onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <div>
