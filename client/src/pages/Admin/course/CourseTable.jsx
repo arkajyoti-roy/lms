@@ -54,9 +54,16 @@ const CourseTable = () => {
   }, []);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  if (courses.length === 0) return <p>No courses available.</p>;
-
+  // if (error) return <p>Error: {error.message}</p>;
+  if (courses.length === 0) return (
+    <div>
+      <Button className="mb-3" onClick={() => navigate(`create`)}>
+        Create a new course
+      </Button>
+      <br/>
+      <p>No courses available. </p>
+    </div>
+      );
   return (
     <div>
       <Button className="mb-3" onClick={() => navigate(`create`)}>
