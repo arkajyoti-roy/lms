@@ -1,5 +1,5 @@
-import { Button } from "@/Components/ui/button";
-import {Edit} from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Edit } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -17,7 +17,7 @@ import { Outlet } from "react-router-dom";
 
 const CourseTable = () => {
   const navigate = useNavigate();
-  const [courses, setCourses] = useState([]); // Initialize as an empty array
+  const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -53,38 +53,41 @@ const CourseTable = () => {
       <Button className="mb-3" onClick={() => navigate(`create`)}>
         Create a new course
       </Button>
-      <Table>
-        <TableCaption>A list of your recent courses.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Price</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead className="text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {courses.map((course) => (
-            <TableRow key={course._id}>
-              <TableCell className="font-medium">{course.coursePrice ? course.coursePrice : "N/A"}</TableCell>
-              <TableCell>{course.isPublished ? "Published" : "Draft"}</TableCell>
-              <TableCell>{course.courseTitle}</TableCell>
-              <TableCell>{course.courseTitle}</TableCell>
-              <TableCell className="text-right">
-                {/* Add any action buttons or links here */}
-                <Button>Edit<Edit /></Button>
-              </TableCell>
+      {courses.length === 0 ? (
+        <p>No courses available.</p>
+      ) : (
+        <Table>
+          <TableCaption>A list of your recent courses.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Price</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}></TableCell>
-            <TableCell className="text-right"></TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {courses.map((course) => (
+              <TableRow key={course._id}>
+                <TableCell className="font-medium">{course.coursePrice ? course.coursePrice : "N/A"}</TableCell>
+                <TableCell>{course.isPublished ? "Published" : "Draft"}</TableCell>
+                <TableCell>{course.courseTitle}</TableCell>
+                <TableCell>{course.courseDescription}</TableCell>
+                <TableCell className="text-right">
+                  <Button>Edit<Edit /></Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={3}></TableCell>
+              <TableCell className="text-right"></TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      )}
       <div>
         <Outlet />
       </div>

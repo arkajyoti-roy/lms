@@ -10,6 +10,7 @@ import CourseTable from "./pages/Admin/course/CourseTable";
 import Dashboard from "./pages/Admin/Dashboard";
 import AddCourse from "./pages/Admin/course/AddCourse";
 import ProtectedRoute from "./components/ProtectedRoute";
+import InsProfile from "./pages/Admin/InsProfile";
 
 const appRouter = createBrowserRouter([
   {
@@ -48,6 +49,11 @@ const appRouter = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+         // Test route for CourseTable
+         {
+          path: "/test-course-table",
+          element: <CourseTable />,
+        },
 
       // Admin Routes
       {
@@ -58,6 +64,10 @@ const appRouter = createBrowserRouter([
           </ProtectedRoute>
         ),
         children: [
+          {
+            path: "ins-profile",
+            element: <InsProfile />,
+          },
           {
             path: "dashboard",
             element: <Dashboard />,
@@ -80,6 +90,7 @@ const App = () => {
   return (
     <main>
       <RouterProvider router={appRouter} />
+ 
     </main>
   );
 };

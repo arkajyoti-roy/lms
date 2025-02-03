@@ -88,7 +88,7 @@ const Navbar = () => {
                     ) : (
                       <>
                         <button>
-                          <Link to="profile">Profile</Link>
+                          <Link to="admin/ins-profile">Profile</Link>
                         </button>
                         <button>
                           <Link to="admin/dashboard">Dashboard</Link>
@@ -156,7 +156,7 @@ const Navbar = () => {
                 ) : (
                   <>
                     <DropdownMenuItem>
-                      <Link to="profile">
+                      <Link to="admin/ins-profile">
                         <button
                           className="text-left"
                           style={{ width: "100px" }}
