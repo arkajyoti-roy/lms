@@ -23,17 +23,25 @@ const CourseTable = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      const url = "http://localhost:8081/api/v1/course/getCourses";
+      if (!url) {
+        setError(new Error("URL is empty or invalid"));
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await axios.get(
-          "http://localhost:8081/api/v1/course/getCourses",
-          {
-            withCredentials: true, // If your API requires credentials
-          }
-        );
-        // Ensure the response data is an array
-        const courseData = Array.isArray(response.data.courses)
-          ? response.data.courses
-          : [];
+        const response = await axios.get(url, {
+          withCredentials: true, // If your API requires credentials
+        });
+
+        if (!response.data || !Array.isArray(response.data.courses)) {
+          setError(new Error("Invalid response format"));
+          setLoading(false);
+          return;
+        }
+
+        const courseData = response.data.courses;
         setCourses(courseData);
         setLoading(false);
       } catch (err) {
@@ -47,47 +55,44 @@ const CourseTable = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
+  if (courses.length === 0) return <p>No courses available.</p>;
 
   return (
     <div>
       <Button className="mb-3" onClick={() => navigate(`create`)}>
         Create a new course
       </Button>
-      {courses.length === 0 ? (
-        <p>No courses available.</p>
-      ) : (
-        <Table>
-          <TableCaption>A list of your recent courses.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Price</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-right">Action</TableHead>
+      <Table>
+        <TableCaption>A list of your recent courses.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">Price</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead className="text-right">Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {courses.map((course) => (
+            <TableRow key={course._id}>
+              <TableCell className="font-medium">{course.coursePrice ? course.coursePrice : "N/A"}</TableCell>
+              <TableCell>{course.isPublished ? "Published" : "Draft"}</TableCell>
+              <TableCell>{course.courseTitle}</TableCell>
+              <TableCell>{course.courseDescription}</TableCell>
+              <TableCell className="text-right">
+                <Button onClick={()=> navigate(`${course._id}`)}>Edit<Edit /></Button>
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {courses.map((course) => (
-              <TableRow key={course._id}>
-                <TableCell className="font-medium">{course.coursePrice ? course.coursePrice : "N/A"}</TableCell>
-                <TableCell>{course.isPublished ? "Published" : "Draft"}</TableCell>
-                <TableCell>{course.courseTitle}</TableCell>
-                <TableCell>{course.courseDescription}</TableCell>
-                <TableCell className="text-right">
-                  <Button>Edit<Edit /></Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={3}></TableCell>
-              <TableCell className="text-right"></TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
-      )}
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3}></TableCell>
+            <TableCell className="text-right"></TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
       <div>
         <Outlet />
       </div>

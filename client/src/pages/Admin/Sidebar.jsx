@@ -17,6 +17,10 @@ const Sidebar = () => {
             <SquareLibrary size={22} />
             <h1>Courses</h1>
           </Link>
+          <Link to="ins-profile" className="flex items-center gap-2">
+            <SquareLibrary size={22} />
+            <h1>Profile</h1>
+          </Link>
         </div>
       </div>
     <div className="flex-1 p-10 ">

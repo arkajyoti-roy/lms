@@ -11,9 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-// import { Select } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import { useLoginMutation, useSignupMutation } from "@/features/api/authApi.js";
 import {
   useRegisterUserMutation,
   useLoginUserMutation,
@@ -84,18 +82,15 @@ const Login = () => {
     const inputData = type === "signup" ? signup : login;
     const action = type === "signup" ? registerUser : loginUser;
 
-    console.log("Submitting data:", inputData); // Log the request payload
-
     try {
-      const result = await action(inputData).unwrap();
-      console.log(`${type} successful:`, result);
+      await action(inputData).unwrap();
     } catch (err) {
-      console.error("Error during submission:", err);
       if (err.data) {
         console.error("Server response data:", err.data);
       }
     }
   };
+
   useEffect(() => {
     if (registerIsSuccess && registerData) {
       toast.success(registerData.message || "Signup Successful!");
@@ -140,7 +135,6 @@ const Login = () => {
     registerIsSuccess,
     navigate,
   ]);
-  
 
   return (
     <>

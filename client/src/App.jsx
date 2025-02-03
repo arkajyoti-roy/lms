@@ -11,6 +11,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 import AddCourse from "./pages/Admin/course/AddCourse";
 import ProtectedRoute from "./components/ProtectedRoute";
 import InsProfile from "./pages/Admin/InsProfile";
+import EditCourse from "./pages/Admin/course/EditCourse";
 
 const appRouter = createBrowserRouter([
   {
@@ -49,11 +50,11 @@ const appRouter = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-         // Test route for CourseTable
-         {
-          path: "/test-course-table",
-          element: <CourseTable />,
-        },
+      // Test route for CourseTable
+      {
+        path: "/test-course-table",
+        element: <CourseTable />,
+      },
 
       // Admin Routes
       {
@@ -80,6 +81,10 @@ const appRouter = createBrowserRouter([
             path: "course/create",
             element: <AddCourse />,
           },
+          {
+            path: "course/:courseId",
+            element: <EditCourse />,
+          },
         ],
       },
     ],
@@ -90,7 +95,6 @@ const App = () => {
   return (
     <main>
       <RouterProvider router={appRouter} />
- 
     </main>
   );
 };
