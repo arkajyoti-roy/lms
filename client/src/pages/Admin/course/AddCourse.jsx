@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { COURSES_URL } from "@/Components/url";
 
 const AddCourse = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const AddCourse = () => {
     setIsLoading(true); // Set loading to true when the request starts
     try {
       const response = await axios.post(
-        "http://localhost:8081/api/v1/course",
+        `${COURSES_URL}`,
         cous,
         {
           headers: {

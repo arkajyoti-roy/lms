@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Outlet } from "react-router-dom";
+import { COURSES_URL } from "@/Components/url";
 
 const CourseTable = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const CourseTable = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const url = "http://localhost:8081/api/v1/course/getCourses";
+      const url = `${COURSES_URL}/getCourses`;
       if (!url) {
         setError(new Error("URL is empty or invalid"));
         setLoading(false);

@@ -21,6 +21,7 @@ import {
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { COURSES_URL } from "@/Components/url";
 
 const CourseTab = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +78,7 @@ const CourseTab = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:8081/api/v1/course/${courseId}`,
+        `${COURSES_URL}/${courseId}`,
         formData,
         {
           headers: {
@@ -96,6 +97,9 @@ const CourseTab = () => {
       setIsLoading(false);
     }
   };
+
+
+  
 
   const navigate = useNavigate();
   const isPublished = true;
