@@ -10,7 +10,7 @@ import {
 import { Input } from "@/Components/ui/input";
 import RichTextEditor from "@/Components/RichTextEditor";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -19,9 +19,11 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 import { Loader2 } from "lucide-react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const CourseTab = () => {
-  const isLoading = false;
+  const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState({
     courseTitle: "",
     subTitle: "",
@@ -35,7 +37,6 @@ const CourseTab = () => {
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
-    console.log(setInput);
   };
 
   const selectCategory = (value) => {
@@ -59,17 +60,51 @@ const CourseTab = () => {
       fileReader.readAsDataURL(file);
     }
   };
-const updateCourseHandler = () =>{
-    console.log(input);
-    
-}
+
+  const params = useParams();
+  const courseId = params.courseId;
+
+  const updateCourseHandler = async () => {
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append("courseTitle", input.courseTitle);
+    formData.append("subTitle", input.subTitle);
+    formData.append("description", input.description);
+    formData.append("category", input.category);
+    formData.append("courseLevel", input.courseLevel);
+    formData.append("coursePrice", input.coursePrice);
+    formData.append("courseThumbnail", input.courseThumbnail);
+
+    try {
+      const response = await axios.put(
+        `http://localhost:8081/api/v1/course/${courseId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      toast.success(response.data.message || "Edit Success!");
+      navigate("/admin/course");
+    } catch (error) {
+      console.error("There was an error updating the course!", error);
+      toast.error(error.response.data.message || "There was an error updating the course!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const navigate = useNavigate();
   const isPublished = true;
+
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
         <div>
-          <CardTitle>Basic course Details</CardTitle>
+          <CardTitle>Basic Course Details</CardTitle>
           <CardDescription>
             Make changes to your courses. Click save when you are done.
           </CardDescription>
@@ -91,7 +126,7 @@ const updateCourseHandler = () =>{
               type="text"
               value={input.courseTitle}
               onChange={changeEventHandler}
-              placeholder="ex. Fullstack developer"
+              placeholder="ex. Fullstack Developer"
             />
           </div>
           <div>
@@ -116,9 +151,7 @@ const updateCourseHandler = () =>{
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Web Development">
-                    Web Development
-                  </SelectItem>
+                  <SelectItem value="Web Development">Web Development</SelectItem>
                   <SelectItem value="DSA">DSA</SelectItem>
                   <SelectItem value="Cloud">Cloud</SelectItem>
                   <SelectItem value="Networking">Networking</SelectItem>
@@ -170,14 +203,13 @@ const updateCourseHandler = () =>{
             )}
           </div>
           <div className="space-x-2">
-            <Button onClick={() => navigate("/admin/course")} varient="outline">
+            <Button onClick={() => navigate("/admin/course")} variant="outline">
               Cancel
             </Button>
-            <Button onClick={updateCourseHandler} className="" disabled={isLoading}>
+            <Button onClick={updateCourseHandler} disabled={isLoading}>
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4" animate-spin /> Please
-                  wait...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait...
                 </>
               ) : (
                 "Save"
