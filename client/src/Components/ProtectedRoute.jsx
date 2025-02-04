@@ -1,6 +1,7 @@
-import { Navigate } from "react-router-dom";
-import { useUserDetails } from "../utils/useUserDetails";
-import PropTypes from "prop-types";
+// import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useUserDetails } from '../utils/useUserDetails';
+import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, isLoading, isError } = useUserDetails();
@@ -11,7 +12,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   if (isError || !user || !allowedRoles.includes(user.role)) {
     // Redirect to the main page if unauthorized
-    const redirectPath = user?.role === "instructor" ? "/admin/dashboard" : "/";
+    const redirectPath = user?.role === 'instructor' ? '/admin/dashboard' : '/';
     return <Navigate to={redirectPath} />;
   }
 
