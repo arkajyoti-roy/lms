@@ -59,15 +59,15 @@ const CourseTab = () => {
           courseThumbnail: courseData.courseThumbnail || "",
         });
         setPreviewThumbnail(courseData.courseThumbnail || "");
-        console.log({
-          courseTitle: courseData.courseTitle,
-          subTitle: courseData.subTitle,
-          description: courseData.description,
-          category: courseData.category,
-          courseLevel: courseData.courseLevel,
-          coursePrice: courseData.coursePrice,
-          courseThumbnail: courseData.courseThumbnail,
-        });
+        // console.log({
+        //   courseTitle: courseData.courseTitle,
+        //   subTitle: courseData.subTitle,
+        //   description: courseData.description,
+        //   category: courseData.category,
+        //   courseLevel: courseData.courseLevel,
+        //   coursePrice: courseData.coursePrice,
+        //   courseThumbnail: courseData.courseThumbnail,
+        // });
       }
     } catch (error) {
       console.error("Error fetching course data!", error);
