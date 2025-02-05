@@ -1,27 +1,27 @@
-import { Button } from "@/Components/ui/button";
-import { Label } from "@/Components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/Components/ui/card";
-import { Input } from "@/Components/ui/input";
-import RichTextEditor from "@/Components/RichTextEditor";
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/Components/ui/select";
+} from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { COURSES_URL } from "@/Components/url";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import RichTextEditor from "@/components/RichTextEditor";
 
 const CourseTab = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +34,53 @@ const CourseTab = () => {
     coursePrice: "",
     courseThumbnail: "",
   });
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
+
+  const params = useParams();
+  const courseId = params.courseId;
+
+  const fetchCourseData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get(`${COURSES_URL}/${courseId}`, {
+        withCredentials: true,
+      });
+      const courseData = response.data.course; // Access the nested course object
+      console.log("Fetched course data:", courseData);
+  
+      if (courseData) {
+        setInput({
+          courseTitle: courseData.courseTitle || "",
+          subTitle: courseData.subTitle || "",
+          description: courseData.description || "",
+          category: courseData.category || "",
+          courseLevel: courseData.courseLevel || "",
+          coursePrice: courseData.coursePrice || "",
+          courseThumbnail: courseData.courseThumbnail || "",
+        });
+        setPreviewThumbnail(courseData.courseThumbnail || "");
+        console.log({
+          courseTitle: courseData.courseTitle,
+          subTitle: courseData.subTitle,
+          description: courseData.description,
+          category: courseData.category,
+          courseLevel: courseData.courseLevel,
+          coursePrice: courseData.coursePrice,
+          courseThumbnail: courseData.courseThumbnail,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching course data!", error);
+      toast.error(error.response.data.message || "Error fetching course data!");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchCourseData();
+  }, [courseId]);
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -48,8 +95,6 @@ const CourseTab = () => {
     setInput({ ...input, courseLevel: value });
   };
 
-  const [previewThumbnail, setPreviewThumbnail] = useState("");
-
   const selectThumbnail = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -61,9 +106,6 @@ const CourseTab = () => {
       fileReader.readAsDataURL(file);
     }
   };
-
-  const params = useParams();
-  const courseId = params.courseId;
 
   const updateCourseHandler = async () => {
     setIsLoading(true);
@@ -91,15 +133,12 @@ const CourseTab = () => {
       toast.success(response.data.message || "Edit Success!");
       navigate("/admin/course");
     } catch (error) {
-      console.error("There was an error updating the course!", error);
-      toast.error(error.response.data.message || "There was an error updating the course!");
+      console.error("Error updating course!", error);
+      toast.error(error.response.data.message || "Error updating course!");
     } finally {
       setIsLoading(false);
     }
   };
-
-
-  
 
   const navigate = useNavigate();
   const isPublished = true;
@@ -150,7 +189,7 @@ const CourseTab = () => {
           <div className="flex items-center gap-5">
             <div>
               <Label>Category</Label>
-              <Select onValueChange={selectCategory}>
+              <Select value={input.category} onValueChange={selectCategory}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -164,10 +203,9 @@ const CourseTab = () => {
                 </SelectContent>
               </Select>
             </div>
-
             <div>
               <Label>Course Level</Label>
-              <Select onValueChange={selectCourseLevel}>
+              <Select value={input.courseLevel} onValueChange={selectCourseLevel}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>
