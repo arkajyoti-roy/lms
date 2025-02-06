@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { COURSES_URL } from "@/Components/url";
 import { toast } from "react-toastify";
+import Lecture from "./Lecture";
 
 const CreateLecture = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +50,9 @@ const CreateLecture = () => {
       console.log("Lectures fetched:", response.data);
     } catch (error) {
       console.error("Error fetching lecture data!", error);
-      toast.error(error.response?.data?.message || "Error fetching lecture data!");
+      toast.error(
+        error.response?.data?.message || "Error fetching lecture data!"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +66,9 @@ const CreateLecture = () => {
     <>
       <div className="flex-1 mx-10">
         <div className="mb-4">
-          <h1 className="font-bold text-xl">Add new lectures with details...</h1>
+          <h1 className="font-bold text-xl">
+            Add new lectures with details...
+          </h1>
         </div>
 
         <div className="space-y-4">
@@ -99,32 +104,23 @@ const CreateLecture = () => {
           </div>
         </div>
 
-      <div className="lecture-list mt-8">
-        {isLoading ? (
-          <div className="flex justify-center items-center">
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Loading lectures...
-          </div>
-        ) : lectures.length > 0 ? (
-          <div className="space-y-4">
-            <h2 className="font-bold text-xl">Lectures</h2>
-            <ul className="list-disc pl-5">
-              {lectures.map((lecture) => (
-                <li key={lecture._id}>{lecture.lectureTitle}</li>
+        <div className="mt-10">
+          {isLoading ? (
+            <div className="flex justify-center items-center">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Loading lectures...
+            </div>
+          ) : lectures.length === 0 ? (
+            <p>No lectures found.</p>
+          ) : (
+            <>
+              {lectures.map((lecture, index) => (
+                <Lecture key={lecture._id} courseId={courseId} lecture={lecture} index={index} />
               ))}
-            </ul>
-          </div>
-        ) : (
-          <p>No lectures found.</p>
-        )}
-        {/* <div className="mt-4">
-          <Button onClick={() => navigate(`/admin/course/${courseId}`)} variant="outline">
-            Back to course
-          </Button>
-        </div> */}
+            </>
+          )}
+        </div>
       </div>
-      </div>
-
     </>
   );
 };

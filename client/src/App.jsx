@@ -14,6 +14,7 @@ import PublicRoute from './components/PublicRoute'; // Ensure this import is cor
 import InsProfile from './pages/Admin/InsProfile';
 import EditCourse from './pages/Admin/course/EditCourse';
 import CreateLecture from './pages/Admin/lecture/CreateLecture';
+import EditLecture from './pages/Admin/lecture/EditLecture';
 
 const appRouter = createBrowserRouter([
   {
@@ -94,6 +95,9 @@ const appRouter = createBrowserRouter([
           {
             path: 'course/:courseId/lecture',
             element: <CreateLecture />,
+          },{
+            path: 'course/:courseId/lecture/:lectureId',
+            element: <EditLecture />,
           },
         ],
       },
