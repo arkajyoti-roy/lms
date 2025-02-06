@@ -16,7 +16,7 @@ import axios from "axios";
 import { Outlet } from "react-router-dom";
 import { COURSES_URL } from "@/Components/url";
 
-const CourseTable = () => {
+const CourseTable = () => { 
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);

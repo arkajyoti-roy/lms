@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute'; // Ensure this import is correct
 import InsProfile from './pages/Admin/InsProfile';
 import EditCourse from './pages/Admin/course/EditCourse';
+import CreateLecture from './pages/Admin/lecture/CreateLecture';
 
 const appRouter = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ const appRouter = createBrowserRouter([
           {
             path: 'course/:courseId',
             element: <EditCourse />,
+          },
+          {
+            path: 'course/:courseId/lecture',
+            element: <CreateLecture />,
           },
         ],
       },
