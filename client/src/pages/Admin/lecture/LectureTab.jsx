@@ -4,11 +4,11 @@ import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { MEDIA_URL } from "@/Components/url";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Progress } from "@/components/ui/progress";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const LectureTab = () => {
   const [title, setTitle] = useState("");
@@ -18,9 +18,34 @@ const LectureTab = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
-  const params = useParams(); // Call useParams as a function
+  const params = useParams();
+  const navigate = useNavigate();
   const courseId = params.courseId;
   const lectureId = params.lectureId;
+
+  useEffect(() => {
+    // Fetch existing lecture details
+    const fetchLecture = async () => {
+      try {
+        const res = await axios.get(`${MEDIA_URL}/lectures/${courseId}/${lectureId}`, {
+          withCredentials: true,
+        });
+        if (res.data.success) {
+          setTitle(res.data.lecture.lectureTitle);
+          setUploadInfo({
+            videoUrl: res.data.lecture.videoUrl,
+            publicId: res.data.lecture.publicId,
+          });
+          setIsFree(res.data.lecture.isPreviewFree);
+          setBtnDisabled(false);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error("Failed to fetch lecture details");
+      }
+    };
+    fetchLecture();
+  }, [courseId, lectureId]);
 
   const fileChangeHandle = async (e) => {
     const file = e.target.files[0];
@@ -62,7 +87,7 @@ const LectureTab = () => {
       },
       isPreviewFree: isFree,
     };
-  
+
     try {
       const res = await axios.post(`${MEDIA_URL}/editLecture/${courseId}/${lectureId}`, lectureData, {
         withCredentials: true,
@@ -78,15 +103,32 @@ const LectureTab = () => {
     }
   };
 
+  const removeLecture = async () => {
+    try {
+      const res = await axios.delete(`${MEDIA_URL}/lecture/${lectureId}`, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate(`/course/${courseId}`); // Redirect to course page after removal
+      } else {
+        toast.error("Failed to remove lecture");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred while removing the lecture");
+    }
+  };
+
   return (
     <>
       <Card>
         <CardHeader className="flex justify-between">
           <div>
-            <CardTitle>Edit lecture</CardTitle>
+            <CardTitle>Edit Lecture</CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="destructive">Remove Lecture</Button>
+            <Button variant="destructive" onClick={removeLecture}>Remove Lecture</Button>
           </div>
         </CardHeader>
         <CardContent>
