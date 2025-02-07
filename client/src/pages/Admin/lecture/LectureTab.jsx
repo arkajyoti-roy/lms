@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Progress } from "@/components/ui/progress";
+import { useParams } from "react-router-dom";
 
 const LectureTab = () => {
   const [title, setTitle] = useState("");
@@ -17,8 +18,12 @@ const LectureTab = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
+  const params = useParams(); // Call useParams as a function
+  const courseId = params.courseId;
+  const lectureId = params.lectureId;
+
   const fileChangeHandle = async (e) => {
-    const file = e.target.files[0];  // Corrected here
+    const file = e.target.files[0];
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -41,10 +46,35 @@ const LectureTab = () => {
         }
       } catch (error) {
         console.log(error);
-        toast.error("upload failed");
+        toast.error("Upload failed");
       } finally {
         setMediaProgress(false);
       }
+    }
+  };
+
+  const editLecture = async () => {
+    const lectureData = {
+      lectureTitle: title,
+      videoInfo: {
+        videoUrl: uploadInfo?.videoUrl,
+        publicId: uploadInfo?.publicId,
+      },
+      isPreviewFree: isFree,
+    };
+  
+    try {
+      const res = await axios.post(`${MEDIA_URL}/editLecture/${courseId}/${lectureId}`, lectureData, {
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        toast.success(res.data.message);
+      } else {
+        toast.error("Failed to update lecture");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred while updating the lecture");
     }
   };
 
@@ -65,8 +95,8 @@ const LectureTab = () => {
             <Input 
               type="text" 
               placeholder="Ex. Introduction to JS" 
-              value={title}  // Controlled input
-              onChange={(e) => setTitle(e.target.value)}  // Handle state update
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div>
@@ -91,7 +121,7 @@ const LectureTab = () => {
           )}
 
           <div className="mt-4">
-            <Button disabled={btnDisabled}>Update Lecture</Button>
+            <Button disabled={btnDisabled} onClick={editLecture}>Update Lecture</Button>
           </div>
         </CardContent>
       </Card>
