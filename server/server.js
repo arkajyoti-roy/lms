@@ -4,6 +4,7 @@ import express from 'express';
 import connectDB from './db/db.js';
 import userRoute from './routes/user.route.js';
 import courseRoute from './routes/course.route.js';
+import mediaRoute from './routes/media.route.js'
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -31,17 +32,25 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+
+
 // Custom Middleware for logging request details (optional for debugging)
 app.use((req, res, next) => {
     console.log(`Received ${req.method} request for ${req.url}`);
     next();
 });
 
+
+
+
 // Routes
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/course', courseRoute);
-
+app.use('/api/v1/media', mediaRoute)
 // Error handling middleware
+
+
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     if (err.code === 'LIMIT_FILE_SIZE') {

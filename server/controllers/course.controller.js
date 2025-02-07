@@ -199,8 +199,8 @@ export const getCourseLecture = async (req, res) => {
 
 export const editLecture = async (req, res) =>{
   try {
-    const {lectuteTitle, isPreviewFree} = req.body;
-    
+    const {lectuteTitle, videoInfo, isPreviewFree} = req.body;
+    // const 
   } catch (error) {
     console.log(error);
     return res.status(500).json({
