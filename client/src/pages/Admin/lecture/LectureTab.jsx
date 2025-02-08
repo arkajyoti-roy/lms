@@ -24,16 +24,21 @@ const LectureTab = () => {
 
   useEffect(() => {
     // Fetch existing lecture details
-    // console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
     const fetchLecture = async () => {
-      // console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
       try {
         console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
         const res = await axios.get(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, {
           withCredentials: true,
         });
         console.log("fetched");
-        
+        setTitle(res.data.lecture.lectureTitle);
+        setUploadInfo({
+          videoUrl: res.data.lecture.videoUrl,
+          publicId: res.data.lecture.publicId,
+        });
+        setIsFree(res.data.lecture.isPreviewFree);
+        setBtnDisabled(false);
+        // console.log('Fetched lecture details:', res.data.lecture);
         if (res.data.success) {
           setTitle(res.data.lecture.lectureTitle);
           setUploadInfo({
@@ -120,10 +125,6 @@ const LectureTab = () => {
       console.log('Response:', res.data);
       toast.success(res.data.message);
       navigate(`/admin/course/${courseId}/lecture`); // Redirect to course page after removal
-      // if (res.data.success) {
-      // } else {
-      //   toast.error("Failed to remove lecture");
-      // }
     } catch (error) {
       console.log(error);
       toast.error("An error occurred while removing the lecture");
