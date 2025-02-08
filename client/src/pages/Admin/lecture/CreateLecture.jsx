@@ -16,7 +16,8 @@ const CreateLecture = () => {
   const [lectures, setLectures] = useState([]); // Initialize as an empty array
   const params = useParams();
   const courseId = params.courseId;
-
+// const lectureId = params.lectureId;
+// const lectureId = params.lectureId;
   const createLectureHandler = async () => {
     setIsLoading(true);
     try {
@@ -27,9 +28,13 @@ const CreateLecture = () => {
           withCredentials: true, // If your API requires credentials
         }
       );
+      // navigate("")
       console.log("Lecture created:", response.data);
       toast.success("Lecture created successfully!");
-      // navigate(`/admin/course/${courseId}`);
+      const newLectureId = response.data.lecture._id;
+      setTimeout(() => {
+        navigate(`/admin/course/${courseId}/lecture/${newLectureId}`);
+      },300);
       // Optionally, fetch the updated list of lectures
       getLectures();
     } catch (error) {

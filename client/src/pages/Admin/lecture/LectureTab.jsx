@@ -8,7 +8,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Progress } from "@/components/ui/progress";
 import { useParams, useNavigate } from "react-router-dom";
-
+import { Loader2 } from "lucide-react";
+import { COURSES_URL, MEDIA_URL } from "@/Components/url";
 const LectureTab = () => {
   const [title, setTitle] = useState("");
   const [uploadInfo, setUploadInfo] = useState(null);
@@ -16,6 +17,7 @@ const LectureTab = () => {
   const [mediaProgress, setMediaProgress] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [btnDisabled, setBtnDisabled] = useState(true);
+  const [btnRvDisabled, setRvBtnDisabled] = useState(false);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -27,7 +29,8 @@ const LectureTab = () => {
     const fetchLecture = async () => {
       try {
         console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
-        const res = await axios.get(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, {
+        const res = await axios.get(`${COURSES_URL}/${courseId}/lecture/${lectureId}`, {
+        // const res = await axios.get(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, {
           withCredentials: true,
         });
         console.log("fetched");
@@ -65,7 +68,7 @@ const LectureTab = () => {
       setMediaProgress(true);
       try {
         console.log('Uploading file...');
-        const res = await axios.post(`http://localhost:8081/api/v1/media/upload-video`, formData, {
+        const res = await axios.post(`${MEDIA_URL}/upload-video`, formData, {
           withCredentials: true,
           onUploadProgress: ({ loaded, total }) => {
             setUploadProgress(Math.round((loaded * 100) / total));
@@ -103,7 +106,7 @@ const LectureTab = () => {
     console.log('Course ID:', courseId, 'Lecture ID:', lectureId);
 
     try {
-      const res = await axios.post(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, lectureData, {
+      const res = await axios.post(`${COURSES_URL}/${courseId}/lecture/${lectureId}`, lectureData, {
         withCredentials: true,
       });
       console.log('Response:', res.data);
@@ -118,9 +121,10 @@ const LectureTab = () => {
   const removeLecture = async () => {
     console.log('Removing lecture with ID:', lectureId);
     try {
-      const res = await axios.delete(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, {
+      const res = await axios.delete(`${COURSES_URL}/${courseId}/lecture/${lectureId}`, {
         withCredentials: true,
       });
+      setRvBtnDisabled(false);
       console.log('Response:', res.data);
       toast.success(res.data.message);
       navigate(`/admin/course/${courseId}/lecture`); // Redirect to course page after removal
@@ -138,7 +142,18 @@ const LectureTab = () => {
             <CardTitle>Edit Lecture</CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="destructive" onClick={() => { removeLecture(); setBtnDisabled(true); }}>Remove Lecture</Button>
+            <Button variant="destructive" disabled={btnRvDisabled} onClick={removeLecture}>
+              {btnRvDisabled ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
+                  wait...
+                </>
+              ) : (
+                "Remove Lecture"
+
+              )
+              }
+              </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -176,7 +191,7 @@ const LectureTab = () => {
             <Button 
               disabled={btnDisabled} 
               onClick={() => {
-                setBtnDisabled(true);
+                
                 handleUpdateLecture();
               }}
             >
