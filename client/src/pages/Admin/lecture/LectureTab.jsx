@@ -142,18 +142,18 @@ const LectureTab = () => {
             <CardTitle>Edit Lecture</CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="destructive" disabled={btnRvDisabled} onClick={removeLecture}>
+            <Button variant="destructive" disabled={btnRvDisabled} onClick={() => {
+              setRvBtnDisabled(true);
+              removeLecture();
+            }}>
               {btnRvDisabled ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                  wait...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Removing...
                 </>
               ) : (
                 "Remove Lecture"
-
-              )
-              }
-              </Button>
+              )}
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -191,11 +191,17 @@ const LectureTab = () => {
             <Button 
               disabled={btnDisabled} 
               onClick={() => {
-                
+                setBtnDisabled(true);
                 handleUpdateLecture();
               }}
             >
-              Update Lecture
+              {btnDisabled ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...
+                </>
+              ) : (
+                "Update Lecture"
+              )}
             </Button>
           </div>
         </CardContent>
