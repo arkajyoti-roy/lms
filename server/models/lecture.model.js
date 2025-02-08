@@ -9,6 +9,6 @@ const lectureSchema = new mongoose.Schema({
     publicId: { type: String },
     isPreviewFree: {type: Boolean},
 
-},{yimestamps: true});
+},{timestamps: true});
 
 export const Lecture = mongoose.model("Lecture", lectureSchema);

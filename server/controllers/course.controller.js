@@ -196,48 +196,117 @@ export const getCourseLecture = async (req, res) => {
 };
 
 
-export const editLecture = async (req,res) => {
+// export const editLecture = async (req,res) => {
+//   console.log('Request Params:', req.params);
+//   console.log('Request Body:', req.body);
+//   console.log("receives");
+  
+//   try {
+//       const {lectureTitle, videoInfo, isPreviewFree} = req.body;
+      
+//       const {courseId, lectureId} = req.params;
+//       const lecture = await Lecture.findById(lectureId);
+   
+//       if(!lecture){
+//           return res.status(404).json({
+//               message:"Lecture not found!"
+//           })
+//       }
+
+//       // update lecture
+//       if(lectureTitle) lecture.lectureTitle = lectureTitle;
+//       if(videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+//       if(videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
+//       lecture.isPreviewFree = isPreviewFree;
+
+//       await lecture.save();
+
+//       // Ensure the course still has the lecture id if it was not aleardy added;
+//       const course = await Course.findById(courseId);
+//       if(course && !course.lectures.includes(lecture._id)){
+//           course.lectures.push(lecture._id);
+//           await course.save();
+//       };
+//       return res.status(200).json({
+//         lectureTitle: lecture.lectureTitle,
+//       publicId: lecture.publicId,
+//       videoUrl: lecture.videoUrl,
+//       isPreviewFree: lecture.isPreviewFree, // Ensure this property is included
+//       updatedAt: lecture.updatedAt,
+//       __v: lecture.__v,
+//           lecture,
+//           message:"Lecture updated successfully."
+//       })
+//   } catch (error) {
+//       console.log(error);
+//       return res.status(500).json({
+//           message:"Failed to edit lectures"
+//       })
+//   }
+// }
+
+export const editLecture = async (req, res) => {
   console.log('Request Params:', req.params);
   console.log('Request Body:', req.body);
   console.log("receives");
-  
+
   try {
-      const {lectureTitle, videoInfo, isPreviewFree} = req.body;
-      
-      const {courseId, lectureId} = req.params;
-      const lecture = await Lecture.findById(lectureId);
-   
-      if(!lecture){
-          return res.status(404).json({
-              message:"Lecture not found!"
-          })
-      }
+    const { lectureTitle, videoInfo, isPreviewFree } = req.body;
+    const { courseId, lectureId } = req.params;
 
-      // update lecture
-      if(lectureTitle) lecture.lectureTitle = lectureTitle;
-      if(videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
-      if(videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
-      lecture.isPreviewFree = isPreviewFree;
+    // Validate input
+    if (!lectureTitle || typeof isPreviewFree === 'undefined') {
+      return res.status(400).json({
+        message: "Lecture title and preview status are required!"
+      });
+    }
 
-      await lecture.save();
+    // Find the lecture by ID
+    const lecture = await Lecture.findById(lectureId);
+    if (!lecture) {
+      return res.status(404).json({
+        message: "Lecture not found!"
+      });
+    }
 
-      // Ensure the course still has the lecture id if it was not aleardy added;
-      const course = await Course.findById(courseId);
-      if(course && !course.lectures.includes(lecture._id)){
-          course.lectures.push(lecture._id);
-          await course.save();
-      };
-      return res.status(200).json({
-          lecture,
-          message:"Lecture updated successfully."
-      })
+    // Update lecture fields
+    if (lectureTitle) lecture.lectureTitle = lectureTitle;
+    if (videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+    if (videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
+    lecture.isPreviewFree = isPreviewFree;
+
+    // Save the updated lecture
+    await lecture.save();
+
+    // Ensure the course still has the lecture ID if it was not already added
+    const course = await Course.findById(courseId);
+    if (course && !course.lectures.includes(lecture._id)) {
+      course.lectures.push(lecture._id);
+      await course.save();
+    }
+
+    // Respond with the updated lecture details
+    return res.status(200).json({
+      lecture: {
+        _id: lecture._id,
+        lectureTitle: lecture.lectureTitle,
+        videoUrl: lecture.videoUrl,
+        publicId: lecture.publicId,
+        isPreviewFree: lecture.isPreviewFree, // Ensure this property is included
+        createdAt: lecture.createdAt,
+        updatedAt: lecture.updatedAt,
+        __v: lecture.__v,
+      },
+      message: "Lecture updated successfully."
+    });
   } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-          message:"Failed to edit lectures"
-      })
+    console.log(error);
+    return res.status(500).json({
+      message: "Failed to edit lecture"
+    });
   }
-}
+};
+
 
     // Remove Lecture
     export const removeLecture = async (req, res) => {
