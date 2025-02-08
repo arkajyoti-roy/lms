@@ -163,9 +163,20 @@ const LectureTab = () => {
               className="w-fit"
             />
           </div>
-      
+          {/* <div className="flex items-center space-x-2 my-5">
+            <Switch id="airplane-mode" checked={isFree} onChange={() => setIsFree(!isFree)} />
+            <Label htmlFor="airplane-mode">Is this Free?</Label>
+          </div> */}
  <div className="flex items-center space-x-2 my-5">
-           
+            <input
+              type="checkbox"
+              id="isFree"
+              checked={isFree}
+              onChange={() => setIsFree(!isFree)}
+            />
+            <Label htmlFor="isFree">Is this Free?</Label>
+
+
 
 
             
