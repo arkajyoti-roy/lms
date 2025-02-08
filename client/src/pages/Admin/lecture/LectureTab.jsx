@@ -24,12 +24,16 @@ const LectureTab = () => {
 
   useEffect(() => {
     // Fetch existing lecture details
+    // console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
     const fetchLecture = async () => {
+      // console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
       try {
         console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
-        const res = await axios.get(`http://localhost:8081/api/v1/media/lectures/${courseId}/${lectureId}`, {
+        const res = await axios.get(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, {
           withCredentials: true,
         });
+        console.log("fetched");
+        
         if (res.data.success) {
           setTitle(res.data.lecture.lectureTitle);
           setUploadInfo({
@@ -100,32 +104,26 @@ const LectureTab = () => {
       });
       console.log('Response:', res.data);
       toast.success(res.data.message);
-      navigate(`/admin/course/${courseId}/lecture`)
-      // if (res.data.success) {
-      //   toast.success(res.data.message);
-      // } else {
-      //   toast.error('Failed to update lecture');
-      // }
+      navigate(`/admin/course/${courseId}/lecture`);
     } catch (error) {
       console.error('Error details:', error.response || error.message || error);
       toast.error('An error occurred while updating the lecture');
     }
   };
 
-
   const removeLecture = async () => {
     console.log('Removing lecture with ID:', lectureId);
     try {
-      const res = await axios.delete(`http://localhost:8081/api/v1/media/lecture/${lectureId}`, {
+      const res = await axios.delete(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, {
         withCredentials: true,
       });
       console.log('Response:', res.data);
-      if (res.data.success) {
-        toast.success(res.data.message);
-        navigate(`/course/${courseId}`); // Redirect to course page after removal
-      } else {
-        toast.error("Failed to remove lecture");
-      }
+      toast.success(res.data.message);
+      navigate(`/admin/course/${courseId}/lecture`); // Redirect to course page after removal
+      // if (res.data.success) {
+      // } else {
+      //   toast.error("Failed to remove lecture");
+      // }
     } catch (error) {
       console.log(error);
       toast.error("An error occurred while removing the lecture");
