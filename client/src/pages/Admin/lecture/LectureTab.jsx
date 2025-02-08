@@ -38,7 +38,6 @@ const LectureTab = () => {
         });
         setIsFree(res.data.lecture.isPreviewFree);
         setBtnDisabled(false);
-        // console.log('Fetched lecture details:', res.data.lecture);
         if (res.data.success) {
           setTitle(res.data.lecture.lectureTitle);
           setUploadInfo({
@@ -139,7 +138,7 @@ const LectureTab = () => {
             <CardTitle>Edit Lecture</CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="destructive" onClick={removeLecture}>Remove Lecture</Button>
+            <Button variant="destructive" onClick={() => { removeLecture(); setBtnDisabled(true); }}>Remove Lecture</Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -174,7 +173,15 @@ const LectureTab = () => {
           )}
 
           <div className="mt-4">
-            <Button disabled={btnDisabled} onClick={handleUpdateLecture}>Update Lecture</Button>
+            <Button 
+              disabled={btnDisabled} 
+              onClick={() => {
+                setBtnDisabled(true);
+                handleUpdateLecture();
+              }}
+            >
+              Update Lecture
+            </Button>
           </div>
         </CardContent>
       </Card>

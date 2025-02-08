@@ -17,7 +17,7 @@ router.route('/:courseId/lecture/:lectureId').post(isAuthenticated, (req, res, n
   next();
 }, editLecture);
 
-router.route('/lecture/:lectureId').delete(isAuthenticated, removeLecture);
-router.route('/lecture/:lectureId').get(isAuthenticated, getLectureById);
+router.route('/:courseId/lecture/:lectureId').delete(isAuthenticated, removeLecture);
+router.route('/:courseId/lecture/:lectureId').get(isAuthenticated, getLectureById);
 
 export default router;
