@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { MEDIA_URL } from "@/Components/url";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -27,7 +26,8 @@ const LectureTab = () => {
     // Fetch existing lecture details
     const fetchLecture = async () => {
       try {
-        const res = await axios.get(`${MEDIA_URL}/lectures/${courseId}/${lectureId}`, {
+        console.log('Fetching lecture details for courseId:', courseId, 'lectureId:', lectureId);
+        const res = await axios.get(`http://localhost:8081/api/v1/media/lectures/${courseId}/${lectureId}`, {
           withCredentials: true,
         });
         if (res.data.success) {
@@ -38,6 +38,7 @@ const LectureTab = () => {
           });
           setIsFree(res.data.lecture.isPreviewFree);
           setBtnDisabled(false);
+          console.log('Fetched lecture details:', res.data.lecture);
         }
       } catch (error) {
         console.log(error);
@@ -55,7 +56,8 @@ const LectureTab = () => {
 
       setMediaProgress(true);
       try {
-        const res = await axios.post(`${MEDIA_URL}/upload-video`, formData, {
+        console.log('Uploading file...');
+        const res = await axios.post(`http://localhost:8081/api/v1/media/upload-video`, formData, {
           withCredentials: true,
           onUploadProgress: ({ loaded, total }) => {
             setUploadProgress(Math.round((loaded * 100) / total));
@@ -68,6 +70,7 @@ const LectureTab = () => {
           });
           setBtnDisabled(false);
           toast.success(res.data.message);
+          console.log('File uploaded successfully:', res.data.data);
         }
       } catch (error) {
         console.log(error);
@@ -78,7 +81,7 @@ const LectureTab = () => {
     }
   };
 
-  const editLecture = async () => {
+  const handleUpdateLecture = async () => {
     const lectureData = {
       lectureTitle: title,
       videoInfo: {
@@ -88,26 +91,35 @@ const LectureTab = () => {
       isPreviewFree: isFree,
     };
 
+    console.log('Editing lecture with data:', lectureData);
+    console.log('Course ID:', courseId, 'Lecture ID:', lectureId);
+
     try {
-      const res = await axios.post(`${MEDIA_URL}/editLecture/${courseId}/${lectureId}`, lectureData, {
+      const res = await axios.post(`http://localhost:8081/api/v1/course/${courseId}/lecture/${lectureId}`, lectureData, {
         withCredentials: true,
       });
-      if (res.data.success) {
-        toast.success(res.data.message);
-      } else {
-        toast.error("Failed to update lecture");
-      }
+      console.log('Response:', res.data);
+      toast.success(res.data.message);
+      navigate(`/admin/course/${courseId}/lecture`)
+      // if (res.data.success) {
+      //   toast.success(res.data.message);
+      // } else {
+      //   toast.error('Failed to update lecture');
+      // }
     } catch (error) {
-      console.log(error);
-      toast.error("An error occurred while updating the lecture");
+      console.error('Error details:', error.response || error.message || error);
+      toast.error('An error occurred while updating the lecture');
     }
   };
 
+
   const removeLecture = async () => {
+    console.log('Removing lecture with ID:', lectureId);
     try {
-      const res = await axios.delete(`${MEDIA_URL}/lecture/${lectureId}`, {
+      const res = await axios.delete(`http://localhost:8081/api/v1/media/lecture/${lectureId}`, {
         withCredentials: true,
       });
+      console.log('Response:', res.data);
       if (res.data.success) {
         toast.success(res.data.message);
         navigate(`/course/${courseId}`); // Redirect to course page after removal
@@ -163,7 +175,7 @@ const LectureTab = () => {
           )}
 
           <div className="mt-4">
-            <Button disabled={btnDisabled} onClick={editLecture}>Update Lecture</Button>
+            <Button disabled={btnDisabled} onClick={handleUpdateLecture}>Update Lecture</Button>
           </div>
         </CardContent>
       </Card>
