@@ -104,27 +104,29 @@ const CourseTab = () => {
   const updateCourseHandler = async () => {
     setIsLoading(true);
     const formData = new FormData();
+  
     formData.append("courseTitle", input.courseTitle);
     formData.append("subTitle", input.subTitle);
     formData.append("description", input.description);
     formData.append("category", input.category);
     formData.append("courseLevel", input.courseLevel);
     formData.append("coursePrice", input.coursePrice);
-    formData.append("courseThumbnail", input.courseThumbnail);
-
+    
+    // Check if the courseThumbnail is a File object, then append it
+    if (input.courseThumbnail instanceof File) {
+      formData.append("courseThumbnail", input.courseThumbnail);
+    }
+  
     try {
-      const response = await axios.put(
-        `${COURSES_URL}/${courseId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        }
-      );
+      const response = await axios.put(`${COURSES_URL}/${courseId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
       console.log(response.data);
       toast.success(response.data.message || "Edit Success!");
+      toast.success("Edit Success!");
       navigate("/admin/course");
     } catch (error) {
       console.error("Error updating course!", error);
@@ -133,7 +135,7 @@ const CourseTab = () => {
       setIsLoading(false);
     }
   };
-
+  
   const navigate = useNavigate();
 
   const publishStatusHandler = async (publish) => {
