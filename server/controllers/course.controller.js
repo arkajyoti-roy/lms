@@ -105,13 +105,14 @@ export const editCourse = async (req, res) => {
       });
     }
 
-    let courseThumbnail;
+    let courseThumbnail = course.courseThumbnail;
     if (thumbnail) {
       if (course.courseThumbnail) {
         const publicId = course.courseThumbnail.split("/").pop().split(".")[0];
         await deleteMedia(publicId);
       }
-      courseThumbnail = await uploadMedia(thumbnail.path);
+      const uploadResult = await uploadMedia(thumbnail.path);
+      courseThumbnail = uploadResult.secure_url;
     }
 
     const updateData = {
@@ -121,7 +122,7 @@ export const editCourse = async (req, res) => {
       category,
       courseLevel,
       coursePrice,
-      courseThumbnail: thumbnail?.secure_url
+      courseThumbnail
     };
 
     course = await Course.findByIdAndUpdate(courseId, updateData, { new: true });
@@ -139,6 +140,13 @@ export const editCourse = async (req, res) => {
     });
   }
 };
+
+
+// bhjhguyg
+
+
+
+
 
 export const getCourseById = async (req, res) => {
 

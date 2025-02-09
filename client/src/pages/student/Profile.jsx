@@ -19,6 +19,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { BASE_URL } from "@/Components/url";
 
 const Profile = () => {
   const { user, isLoading, isError, error } = useUserDetails();
@@ -61,7 +62,7 @@ const Profile = () => {
 
     try {
       const response = await axios.put(
-        "http://localhost:8081/api/v1/user/profile/update",
+        `${BASE_URL}/user/profile/update`,
         formData,
         {
           headers: {
