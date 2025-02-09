@@ -33,6 +33,8 @@ const CourseTab = () => {
     courseLevel: "",
     coursePrice: "",
     courseThumbnail: "",
+    isPublished: false,
+    lectures: [],
   });
   const [previewThumbnail, setPreviewThumbnail] = useState("");
 
@@ -45,7 +47,7 @@ const CourseTab = () => {
       const response = await axios.get(`${COURSES_URL}/${courseId}`, {
         withCredentials: true,
       });
-      const courseData = response.data.course; // Access the nested course object
+      const courseData = response.data.course;
       console.log("Fetched course data:", courseData);
   
       if (courseData) {
@@ -57,17 +59,10 @@ const CourseTab = () => {
           courseLevel: courseData.courseLevel || "",
           coursePrice: courseData.coursePrice || "",
           courseThumbnail: courseData.courseThumbnail || "",
+          isPublished: courseData.isPublished || false,
+          lectures: courseData.lectures || [],
         });
         setPreviewThumbnail(courseData.courseThumbnail || "");
-        // console.log({
-        //   courseTitle: courseData.courseTitle,
-        //   subTitle: courseData.subTitle,
-        //   description: courseData.description,
-        //   category: courseData.category,
-        //   courseLevel: courseData.courseLevel,
-        //   coursePrice: courseData.coursePrice,
-        //   courseThumbnail: courseData.courseThumbnail,
-        // });
       }
     } catch (error) {
       console.error("Error fetching course data!", error);
@@ -76,7 +71,6 @@ const CourseTab = () => {
       setIsLoading(false);
     }
   };
-  
 
   useEffect(() => {
     fetchCourseData();
@@ -141,7 +135,28 @@ const CourseTab = () => {
   };
 
   const navigate = useNavigate();
-  const isPublished = true;
+
+  const publishStatusHandler = async (publish) => {
+    try {
+      const res = await axios.patch(
+        `${COURSES_URL}/${courseId}?publish=${publish}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("Response from publishStatusHandler:", res.data);
+      toast.success(res.data.message);
+      setInput((prevState) => ({
+        ...prevState,
+        isPublished: publish === "true",
+      }));
+      console.log("Updated isPublished state:", publish);
+    } catch (error) {
+      console.error("Error in publishStatusHandler:", error);
+      toast.error(error.response.data.message || 'Failed to update course status.');
+    }
+  };
 
   return (
     <Card>
@@ -154,8 +169,12 @@ const CourseTab = () => {
         </div>
 
         <div className="space-x-2">
-          <Button variant="outline">
-            {isPublished ? "Unpublished" : "Published"}
+          <Button 
+            disabled={input.lectures.length === 0} 
+            variant="outline" 
+            onClick={() => publishStatusHandler(input.isPublished ? "false" : "true")}
+          >
+            {input.isPublished ? "Unpublished" : "Publish"}
           </Button>
           <Button>Remove Course</Button>
         </div>

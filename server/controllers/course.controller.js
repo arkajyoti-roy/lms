@@ -365,3 +365,34 @@ export const editLecture = async (req, res) => {
         });
       }
     };
+
+    export const togglePublishedCourse = async (req, res) => {
+      try {
+        const { courseId } = req.params;
+        const { publish } = req.query;
+        console.log(`Received request to toggle publish status for courseId: ${courseId}, publish: ${publish}`);
+        
+        const course = await Course.findById(courseId);
+    
+        if (!course) {
+          return res.status(404).json({
+            message: "course not found"
+          });
+        }
+    
+        course.isPublished = publish === "true";
+        await course.save();
+    
+        const statusMessage = course.isPublished ? "Published" : "Unpublished";
+        console.log(`Course ${courseId} is now ${statusMessage}`);
+        return res.status(200).json({
+          message: `Course ${statusMessage}`
+        });
+      } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+          message: "Failed to update status.",
+        });
+      }
+    };
+    
