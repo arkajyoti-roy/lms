@@ -16,6 +16,7 @@ import EditCourse from './pages/Admin/course/EditCourse';
 import CreateLecture from './pages/Admin/lecture/CreateLecture';
 import EditLecture from './pages/Admin/lecture/EditLecture';
 import CourseDetail from './pages/student/CourseDetail';
+import CourseProgress from './pages/student/CourseProgress';
 
 const appRouter = createBrowserRouter([
   {
@@ -58,6 +59,14 @@ const appRouter = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      // {
+      //   path: '/course-progress/:courseId',
+      //   element: (
+      //     <ProtectedRoute allowedRoles={['student']}>
+      //       <CourseProgress />
+      //     </ProtectedRoute>
+      //   ),
+      // },
       {
         path: '/my-learning',
         element: (

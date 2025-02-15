@@ -5,6 +5,10 @@ import { CoursePurchase } from "../models/coursePurchase.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import User from "../models/user.model.js";
 
+// Log the Razorpay credentials to debug
+console.log("RAZORPAY_KEY_ID:", process.env.RAZORPAY_KEY_ID);
+console.log("RAZORPAY_KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET);
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -13,18 +17,23 @@ const razorpay = new Razorpay({
 export const createCheckoutSession = async (req, res) => {
   try {
     const userId = req.id;
-    const { courseId } = req.body; // Extract courseId from req.body
+    const { courseId } = req.body;
 
-    if (!courseId) {
-      return res.status(400).json({ message: "Course ID is required" });
+    // Log the courseId to debug
+    console.log("Received courseId:", courseId);
+
+    // Ensure courseId is a string
+    const courseIdString = typeof courseId === "string" ? courseId : courseId.courseId;
+    if (typeof courseIdString !== "string") {
+      return res.status(400).json({ message: "Invalid courseId format" });
     }
 
-    const course = await Course.findById(courseId.toString()); // Ensure courseId is handled as a string
+    const course = await Course.findById(courseIdString);
     if (!course) return res.status(404).json({ message: "Course not found!" });
 
     // Create a new course purchase record
     const newPurchase = new CoursePurchase({
-      courseId: course._id,
+      courseId: courseIdString,
       userId,
       amount: course.coursePrice,
       status: "pending",
@@ -114,7 +123,6 @@ export const verifyPayment = async (req, res) => {
   }
 };
 
-
 export const handleWebhook = async (req, res) => {
   const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
   const receivedSignature = req.headers["x-razorpay-signature"];
@@ -170,9 +178,6 @@ export const handleWebhook = async (req, res) => {
     return res.status(400).json({ message: "Invalid signature" });
   }
 };
-
-
-
 
 export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   try {

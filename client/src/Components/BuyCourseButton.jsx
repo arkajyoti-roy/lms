@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import { Button } from "./ui/button";
 import { useCreateCheckoutSessionMutation } from "@/features/api/purchaseApi";
 import { Loader2 } from "lucide-react";
@@ -37,6 +38,11 @@ const BuyCourseButton = ({ courseId }) => {
       )}
     </Button>
   );
+};
+
+// Add PropTypes validation
+BuyCourseButton.propTypes = {
+  courseId: PropTypes.string.isRequired, // Validate courseId prop
 };
 
 export default BuyCourseButton;
