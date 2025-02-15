@@ -29,8 +29,8 @@ const CourseProgress = () => {
   ] = useInCompleteCourseMutation();
 
   useEffect(() => {
-    console.log('Mark Complete Data:', markCompleteData);
-    console.log('Mark InComplete Data:', markInCompleteData);
+    console.log("Mark Complete Data:", markCompleteData);
+    console.log("Mark InComplete Data:", markInCompleteData);
 
     if (completedSuccess) {
       refetch();
@@ -48,7 +48,7 @@ const CourseProgress = () => {
   if (isError) return <p>Failed to load course details</p>;
   if (!data) return <p>No data available</p>;
 
-  console.log('API Data:', data); // Log the API data for debugging
+  console.log("API Data:", data); // Log the API data for debugging
 
   const { courseDetails, progress, completed } = data.data || {};
   if (!courseDetails || !progress) return <p>Incomplete data</p>;
@@ -60,7 +60,9 @@ const CourseProgress = () => {
     currentLecture || (courseDetails.lectures && courseDetails.lectures[0]);
 
   const isLectureCompleted = (lectureId) => {
-    return progress?.some((prog) => prog.lectureId === lectureId && prog.viewed);
+    return progress?.some(
+      (prog) => prog.lectureId === lectureId && prog.viewed
+    );
   };
 
   const handleLectureProgress = async (lectureId) => {
@@ -82,8 +84,40 @@ const CourseProgress = () => {
     await inCompleteCourse(courseId);
   };
 
+  // Function to get the file extension
+  const getFileExtension = (url) => {
+    return url.split('.').pop().split('?')[0].toLowerCase();
+  };
+
+  // Determine the content type based on the file extension
+  const getContentType = (url) => {
+    const extension = getFileExtension(url);
+    if (["mp4", "webm", "ogg", "mkv", "avi", "mov", "wmv", "flv", "mpeg"].includes(extension)) {
+      return "video";
+    } else if (["pdf"].includes(extension)) {
+      return "pdf";
+    } else if (["jpg", "jpeg", "png", "gif", "bmp", "tiff", "svg", "webp"].includes(extension)) {
+      return "image";
+    } else if (["mp3", "wav", "aac", "flac", "m4a", "ogg"].includes(extension)) {
+      return "audio";
+    } else if (["doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt"].includes(extension)) {
+      return "document";
+    } else {
+      return "unsupported";
+    }
+  };
+  
+
+  // Determine content type for current and initial lecture
+  const currentContentType = currentLecture
+    ? getContentType(currentLecture.videoUrl || currentLecture.videoUrl)
+    : null;
+  const initialContentType = initialLecture
+    ? getContentType(initialLecture.videoUrl || initialLecture.videoUrl)
+    : null;
+
   return (
-    <div className="max-w-7xl mx-auto p-4">
+    <div className="max-w-7xl mx-auto p-4 mt-20">
       {/* Display course name */}
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-bold">{courseTitle}</h1>
@@ -104,27 +138,37 @@ const CourseProgress = () => {
       <div className="flex flex-col md:flex-row gap-6">
         {/* Content section */}
         <div className="flex-1 md:w-3/5 h-fit rounded-lg shadow-lg p-4">
-          {currentLecture?.type === 'video' ? (
-            <video
-              src={currentLecture?.videoUrl || initialLecture?.videoUrl}
-              controls
-              className="w-full h-auto md:rounded-lg"
-              onPlay={() =>
-                handleLectureProgress(currentLecture?._id || initialLecture?._id)
-              }
-            />
-          ) : currentLecture?.type === 'pdf' ? (
-            <iframe
-              src={currentLecture?.fileUrl || initialLecture?.fileUrl}
-              className="w-full h-auto md:rounded-lg"
-              style={{ height: '500px' }}
-            />
-          ) : currentLecture?.type === 'image' ? (
-            <img
-              src={currentLecture?.fileUrl || initialLecture?.fileUrl}
-              alt={currentLecture?.lectureTitle || initialLecture?.lectureTitle}
-              className="w-full h-auto md:rounded-lg"
-            />
+          {currentContentType === "video" || initialContentType === "video" ? (
+            <div>
+              <video
+                src={currentLecture?.videoUrl || initialLecture?.videoUrl}
+                controls
+                className="w-full h-auto md:rounded-lg"
+                onPlay={() =>
+                  handleLectureProgress(
+                    currentLecture?._id || initialLecture?._id
+                  )
+                }
+              />
+            </div>
+          ) : currentContentType === "pdf" || initialContentType === "pdf" ? (
+            <div>
+              <iframe
+                src={currentLecture?.videoUrl || initialLecture?.videoUrl}
+                className="w-full h-auto md:rounded-lg"
+                style={{ height: "500px" }}
+              />
+            </div>
+          ) : currentContentType === "image" || initialContentType === "image" ? (
+            <div>
+              <img
+                src={currentLecture?.videoUrl || initialLecture?.videoUrl}
+                alt={
+                  currentLecture?.lectureTitle || initialLecture?.lectureTitle
+                }
+                className="w-full h-auto md:rounded-lg"
+              />
+            </div>
           ) : (
             <p>Unsupported content type</p>
           )}
@@ -142,6 +186,7 @@ const CourseProgress = () => {
             </h3>
           </div>
         </div>
+
         {/* Lecture Sidebar */}
         <div className="flex flex-col w-full md:w-2/5 border-t md:border-t-0 md:border-l border-gray-200 md:pl-4 pt-4 md:pt-0">
           <h2 className="font-semibold text-xl mb-4">Course Lecture</h2>
