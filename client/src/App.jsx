@@ -15,6 +15,7 @@ import InsProfile from './pages/Admin/InsProfile';
 import EditCourse from './pages/Admin/course/EditCourse';
 import CreateLecture from './pages/Admin/lecture/CreateLecture';
 import EditLecture from './pages/Admin/lecture/EditLecture';
+import CourseDetail from './pages/student/CourseDetail';
 
 const appRouter = createBrowserRouter([
   {
@@ -50,6 +51,14 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
+        path: '/course-detail/:courseId',
+        element: (
+          <ProtectedRoute allowedRoles={['student']}>
+            <CourseDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: '/my-learning',
         element: (
           <ProtectedRoute allowedRoles={['student']}>
@@ -59,8 +68,8 @@ const appRouter = createBrowserRouter([
       },
       // Test route for CourseTable
       {
-        path: '/test-course-table',
-        element: <CourseTable />,
+        path: '/test',
+        element: <CourseDetail />,
       },
 
       // Admin Routes

@@ -6,6 +6,7 @@ import courseRoute from './routes/course.route.js';
 import mediaRoute from './routes/media.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import coursePurchaseRoute from './routes/purchaseCourse.route.js'; // Corrected the import
 import bodyParser from 'body-parser';
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/course', courseRoute);
 app.use('/api/v1/media', mediaRoute);
+app.use('/api/v1/purchase', coursePurchaseRoute); // Corrected the path
 
 const PORT = process.env.PORT || 8081;
 
