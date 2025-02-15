@@ -59,14 +59,14 @@ const appRouter = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      // {
-      //   path: '/course-progress/:courseId',
-      //   element: (
-      //     <ProtectedRoute allowedRoles={['student']}>
-      //       <CourseProgress />
-      //     </ProtectedRoute>
-      //   ),
-      // },
+      {
+        path: '/course-progress/:courseId',
+        element: (
+          <ProtectedRoute allowedRoles={['student']}>
+            <CourseProgress />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: '/my-learning',
         element: (

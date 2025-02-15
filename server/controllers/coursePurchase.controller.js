@@ -5,22 +5,19 @@ import { CoursePurchase } from "../models/coursePurchase.model.js";
 import { Lecture } from "../models/lecture.model.js";
 import User from "../models/user.model.js";
 
-// Log the Razorpay credentials to debug
-console.log("RAZORPAY_KEY_ID:", process.env.RAZORPAY_KEY_ID);
-console.log("RAZORPAY_KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET);
-
+// Initialize Razorpay instance with your credentials
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
+// Create a checkout session
 export const createCheckoutSession = async (req, res) => {
   try {
     const userId = req.id;
     const { courseId } = req.body;
 
-    // Log the courseId to debug
-    console.log("Received courseId:", courseId);
+    console.log("Received courseId:", courseId); // Debugging
 
     // Ensure courseId is a string
     const courseIdString = typeof courseId === "string" ? courseId : courseId.courseId;
@@ -63,6 +60,7 @@ export const createCheckoutSession = async (req, res) => {
       amount: order.amount,
       currency: order.currency,
       key: process.env.RAZORPAY_KEY_ID,
+      courseTitle: course.courseTitle, // Include course title in the response
     });
   } catch (error) {
     console.log(error);
@@ -70,6 +68,7 @@ export const createCheckoutSession = async (req, res) => {
   }
 };
 
+// Verify the payment
 export const verifyPayment = async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -123,6 +122,7 @@ export const verifyPayment = async (req, res) => {
   }
 };
 
+// Handle webhook events
 export const handleWebhook = async (req, res) => {
   const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
   const receivedSignature = req.headers["x-razorpay-signature"];
@@ -179,6 +179,7 @@ export const handleWebhook = async (req, res) => {
   }
 };
 
+// Get course detail with purchase status
 export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   try {
     const { courseId } = req.params;
@@ -204,6 +205,7 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   }
 };
 
+// Get all purchased courses
 export const getAllPurchasedCourse = async (_, res) => {
   try {
     const purchasedCourse = await CoursePurchase.find({
