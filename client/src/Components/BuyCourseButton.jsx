@@ -47,7 +47,7 @@ const BuyCourseButton = ({ courseId }) => {
                   // Log response instead of redirecting for now
                   console.log('Payment successful:', response);
                   console.log('Payment verification response:', data);
-                  // window.location.href = `/course-progress/${courseId}`; // Ensure this line is commented out or removed
+                  window.location.href = `/course-progress/${courseId}`; // Ensure this line is commented out or removed
                 } else {
                   toast.error("Payment verification failed!");
                 }
