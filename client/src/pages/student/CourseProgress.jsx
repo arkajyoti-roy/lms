@@ -106,7 +106,6 @@ const CourseProgress = () => {
       return "unsupported";
     }
   };
-  
 
   // Determine content type for current and initial lecture
   const currentContentType = currentLecture
@@ -115,6 +114,51 @@ const CourseProgress = () => {
   const initialContentType = initialLecture
     ? getContentType(initialLecture.videoUrl || initialLecture.videoUrl)
     : null;
+
+  const renderContent = () => {
+    if (currentContentType === "video" || initialContentType === "video") {
+      return (
+        <div className="relative">
+          <video
+            src={currentLecture?.videoUrl || initialLecture?.videoUrl}
+            controls
+            className="w-full h-auto md:rounded-lg"
+            onPlay={() =>
+              handleLectureProgress(currentLecture?._id || initialLecture?._id)
+            }
+            onContextMenu={(e) => e.preventDefault()} // Disable right-click
+          />
+          <div className="absolute inset-0 bg-transparent" />
+        </div>
+      );
+    } else if (currentContentType === "pdf" || initialContentType === "pdf") {
+      return (
+        <div className="relative">
+          <iframe
+            src={currentLecture?.videoUrl || initialLecture?.videoUrl}
+            className="w-full h-auto md:rounded-lg"
+            style={{ height: "1024px" }}
+            // onContextMenu={(e) => e.preventDefault()} // Disable right-click
+          />
+          <div className="absolute inset-0 bg-transparent" />
+        </div>
+      );
+    } else if (currentContentType === "image" || initialContentType === "image") {
+      return (
+        <div className="relative">
+          <img
+            src={currentLecture?.videoUrl || initialLecture?.videoUrl}
+            alt={currentLecture?.lectureTitle || initialLecture?.lectureTitle}
+            className="w-full h-auto md:rounded-lg"
+            onContextMenu={(e) => e.preventDefault()} // Disable right-click
+          />
+          <div className="absolute inset-0 bg-transparent" />
+        </div>
+      );
+    } else {
+      return <p>Unsupported content type</p>;
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-4 mt-20">
@@ -138,40 +182,7 @@ const CourseProgress = () => {
       <div className="flex flex-col md:flex-row gap-6">
         {/* Content section */}
         <div className="flex-1 md:w-3/5 h-fit rounded-lg shadow-lg p-4">
-          {currentContentType === "video" || initialContentType === "video" ? (
-            <div>
-              <video
-                src={currentLecture?.videoUrl || initialLecture?.videoUrl}
-                controls
-                className="w-full h-auto md:rounded-lg"
-                onPlay={() =>
-                  handleLectureProgress(
-                    currentLecture?._id || initialLecture?._id
-                  )
-                }
-              />
-            </div>
-          ) : currentContentType === "pdf" || initialContentType === "pdf" ? (
-            <div>
-              <iframe
-                src={currentLecture?.videoUrl || initialLecture?.videoUrl}
-                className="w-full h-auto md:rounded-lg"
-                style={{ height: "500px" }}
-              />
-            </div>
-          ) : currentContentType === "image" || initialContentType === "image" ? (
-            <div>
-              <img
-                src={currentLecture?.videoUrl || initialLecture?.videoUrl}
-                alt={
-                  currentLecture?.lectureTitle || initialLecture?.lectureTitle
-                }
-                className="w-full h-auto md:rounded-lg"
-              />
-            </div>
-          ) : (
-            <p>Unsupported content type</p>
-          )}
+          {renderContent()}
           {/* Display current watching lecture title */}
           <div className="mt-2 ">
             <h3 className="font-medium text-lg">
