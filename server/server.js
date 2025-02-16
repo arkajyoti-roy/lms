@@ -29,6 +29,11 @@ app.use((req, res, next) => {
     next();
 });
 
+// Health check endpoint
+app.get('/check', (req, res) => {
+    res.status(200).json({ message: 'Server is up and running!' });
+});
+
 app.use('/api/v1/user', userRoute);
 app.use('/api/v1/course', courseRoute);
 app.use('/api/v1/media', mediaRoute);
