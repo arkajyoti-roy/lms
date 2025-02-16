@@ -9,7 +9,9 @@ import Slidebar from './pages/Admin/Sidebar.jsx';
 import CourseTable from './pages/Admin/course/CourseTable';
 import Dashboard from './pages/Admin/Dashboard';
 import AddCourse from './pages/Admin/course/AddCourse';
-import ProtectedRoute from './components/ProtectedRoute';
+// import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+
 import PublicRoute from './components/PublicRoute'; // Ensure this import is correct
 import InsProfile from './pages/Admin/InsProfile';
 import EditCourse from './pages/Admin/course/EditCourse';
