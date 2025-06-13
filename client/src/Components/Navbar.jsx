@@ -2,7 +2,7 @@ import { CropIcon, MenuIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUniversalLogout } from "@/utils/authUtils";
-import { useUserDetails } from "@/utils/useUserDetails"; // Corrected import statement
+import { useUserDetails } from "@/utils/useUserDetails";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,191 +20,250 @@ import {
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
+
 const Navbar = () => {
   const { user, isLoading } = useUserDetails();
-  const handleLogout = useUniversalLogout(); // Ensure the hook is always called at the top level
-
+  const handleLogout = useUniversalLogout();
   const navigate = useNavigate();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="h-16 dark:bg-gradient-to-r dark:from-slate-900 dark:to-slate-800 bg-gradient-to-r from-white to-gray-50 flex items-center justify-center px-4 shadow-lg backdrop-blur-md fixed top-0 left-0 right-0 z-40 border-b border-gray-200/20">
+        <div className="animate-pulse flex items-center space-x-2">
+          <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
+          <div className="w-16 h-6 bg-gray-300 rounded"></div>
+        </div>
+      </div>
+    );
+  }
 
   const handleLoginClick = () => {
-    navigate("/login", { state: { tab: "login" } }); // Pass state to control the tab
+    navigate("/login", { state: { tab: "login" } });
   };
+
   const handleSignupClick = () => {
-    navigate("/login", { state: { tab: "signup" } }); // Pass state to control the tab
+    navigate("/login", { state: { tab: "signup" } });
   };
-  // const handleButtonClick = () => {
-  //   navigate('/nextPage'); // Navigate to the next page
-  //   setTimeout(() => {
-  //     document.querySelector('#signup').click(); // Simulate click on the signup button
-  //   }, 0);
-  // };
+
   return (
-    <div className="h-16 dark:bg-[#0A0A0A] bg-[#F9FAFB] flex items-center md:justify-around md:gap-96 px-4 shadow-md fixed top-0 left-0 right-0 duration-300 justify-between z-40">
-      <Link to="/">
-        <div className="flex items-center space-x-2">
-          <CropIcon size={"30"} />
-          <h1 className="font-extrabold text-2xl">XYZ</h1>
+    <div className="h-16 dark:bg-gradient-to-r dark:from-slate-900 dark:to-slate-800 bg-gradient-to-r from-white to-gray-50 flex items-center md:justify-around md:gap-96 px-6 shadow-lg backdrop-blur-md fixed top-0 left-0 right-0 duration-300 justify-between z-40 border-b border-gray-200/20">
+      {/* Logo Section */}
+      <Link to="/" className="group">
+        <div className="flex items-center space-x-3 transition-all duration-300 group-hover:scale-105">
+          <div className="relative">
+            <CropIcon 
+              size={32} 
+              className="text-blue-600 dark:text-blue-400 transition-colors duration-300 group-hover:text-blue-700 dark:group-hover:text-blue-300" 
+            />
+            <div className="absolute -inset-1 bg-blue-600/20 rounded-full blur opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </div>
+          <h1 className="font-bold text-2xl bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+            XYZ
+          </h1>
         </div>
       </Link>
+
+      {/* Mobile Menu */}
       <div className="block md:hidden">
         <Sheet>
-          <SheetTrigger>
+          <SheetTrigger className="relative group">
             {user ? (
-              <Avatar>
-                <AvatarImage src={user.photoUrl || ""} />
-                <AvatarFallback>
-                  {user.name ? user.name.charAt(0) : "&"}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="ring-2 ring-blue-500/30 hover:ring-blue-500/60 transition-all duration-300">
+                  <AvatarImage src={user.photoUrl || ""} />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold">
+                    {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></div>
+              </div>
             ) : (
-              <MenuIcon size={"30"} />
+              <div className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors duration-200">
+                <MenuIcon size={28} className="text-gray-700 dark:text-gray-300" />
+              </div>
             )}
           </SheetTrigger>
-          <SheetContent>
+          <SheetContent className="dark:bg-slate-900 bg-white border-l border-gray-200/20">
             {user ? (
               <>
-                <SheetHeader>
+                <SheetHeader className="space-y-4">
                   <div className="flex justify-center items-center">
-                    <Avatar>
+                    <Avatar className="w-16 h-16 ring-4 ring-blue-500/30">
                       <AvatarImage src={user.photoUrl || ""} />
-                      <AvatarFallback>
-                        {user.name ? user.name.charAt(0) : "&"}
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-bold text-xl">
+                        {user.name ? user.name.charAt(0).toUpperCase() : "U"}
                       </AvatarFallback>
                     </Avatar>
                   </div>
-                  <SheetTitle>My Account</SheetTitle>
-                  <div className="flex flex-col space-y-1 justify-start items-start text-2xl font-semibold">
+                  <SheetTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
+                    My Account
+                  </SheetTitle>
+                  <div className="flex flex-col space-y-3 justify-start items-start">
                     {user?.role === "student" ? (
                       <>
-                        <button>
-                          <Link to="profile">Profile</Link>
-                        </button>
-                        <button>
-                          <Link to="my-learning">My Learning</Link>
-                        </button>
+                        <Link to="profile" className="w-full">
+                          <button className="w-full text-left p-3 rounded-lg text-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200 text-gray-700 dark:text-gray-300">
+                            👤 Profile
+                          </button>
+                        </Link>
+                        <Link to="my-learning" className="w-full">
+                          <button className="w-full text-left p-3 rounded-lg text-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200 text-gray-700 dark:text-gray-300">
+                            📚 My Learning
+                          </button>
+                        </Link>
                       </>
                     ) : (
                       <>
-                        <button>
-                          <Link to="admin/ins-profile">Profile</Link>
-                        </button>
-                        <button>
-                          <Link to="admin/dashboard">Dashboard</Link>
-                        </button>
-                        <button>
-                          <Link to="admin/course">Course</Link>
-                        </button>
+                        <Link to="admin/ins-profile" className="w-full">
+                          <button className="w-full text-left p-3 rounded-lg text-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200 text-gray-700 dark:text-gray-300">
+                            👤 Profile
+                          </button>
+                        </Link>
+                        <Link to="admin/dashboard" className="w-full">
+                          <button className="w-full text-left p-3 rounded-lg text-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200 text-gray-700 dark:text-gray-300">
+                            📊 Dashboard
+                          </button>
+                        </Link>
+                        <Link to="admin/course" className="w-full">
+                          <button className="w-full text-left p-3 rounded-lg text-lg font-semibold hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200 text-gray-700 dark:text-gray-300">
+                            📖 Course
+                          </button>
+                        </Link>
                       </>
                     )}
-                    {/* <button>xyz</button> */}
                   </div>
-                  <Button onClick={handleLogout}>Logout</Button>
+                  <Button 
+                    onClick={handleLogout}
+                    className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    🚪 Logout
+                  </Button>
                 </SheetHeader>
               </>
             ) : (
               <div className="flex flex-col space-y-4 mt-8">
-                <Button onClick={handleLoginClick}>Login</Button>
-                <Button onClick={handleSignupClick}>Signup</Button>
-                {/* <Button><Link to="login">Login</Link></Button>
-                <Button><Link to="login">Signup</Link></Button> */}
+                <Button 
+                  onClick={handleLoginClick}
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  🔑 Login
+                </Button>
+                <Button 
+                  onClick={handleSignupClick}
+                  className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  ✨ Sign Up
+                </Button>
               </div>
             )}
           </SheetContent>
         </Sheet>
       </div>
 
-      <div className="hidden md:flex items-center space-x-4">
+      {/* Desktop Menu */}
+      <div className="hidden md:flex items-center space-x-6">
         {user ? (
           <>
+            <div className="flex items-center space-x-3">
+              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Welcome back,
+              </span>
+              <span className="font-semibold text-gray-800 dark:text-gray-200 max-w-[150px] truncate">
+                {user.name}
+              </span>
+            </div>
             <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Avatar>
-                  <AvatarImage src={user.photoUrl || ""} />
-                  <AvatarFallback>
-                    {user.name ? user.name.charAt(0) : "&"}
-                  </AvatarFallback>
-                </Avatar>
+              <DropdownMenuTrigger className="focus:outline-none">
+                <div className="relative group">
+                  <Avatar className="ring-2 ring-blue-500/30 hover:ring-blue-500/60 transition-all duration-300 cursor-pointer">
+                    <AvatarImage src={user.photoUrl || ""} />
+                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></div>
+                </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+              <DropdownMenuContent className="w-56 dark:bg-slate-900 bg-white border border-gray-200/20 shadow-xl">
+                <DropdownMenuLabel className="text-center py-3">
+                  <div className="font-semibold text-gray-800 dark:text-gray-200">My Account</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{user.email}</div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-gray-200/20" />
                 {user?.role === "student" ? (
                   <>
-                    <DropdownMenuItem>
-                      <Link to="profile">
-                        <button
-                          className="text-left"
-                          style={{ width: "100px" }}
-                        >
-                          Profile
+                    <DropdownMenuItem className="hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200">
+                      <Link to="profile" className="w-full">
+                        <button className="w-full text-left flex items-center space-x-2 py-2">
+                          <span>👤</span>
+                          <span>Profile</span>
                         </button>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link to="my-learning">
-                        <button
-                          className="text-left"
-                          style={{ width: "100px" }}
-                        >
-                          My Learning
+                    <DropdownMenuItem className="hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200">
+                      <Link to="my-learning" className="w-full">
+                        <button className="w-full text-left flex items-center space-x-2 py-2">
+                          <span>📚</span>
+                          <span>My Learning</span>
                         </button>
                       </Link>
                     </DropdownMenuItem>
                   </>
                 ) : (
                   <>
-                    <DropdownMenuItem>
-                      <Link to="admin/ins-profile">
-                        <button
-                          className="text-left"
-                          style={{ width: "100px" }}
-                        >
-                          Profile
+                    <DropdownMenuItem className="hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200">
+                      <Link to="admin/ins-profile" className="w-full">
+                        <button className="w-full text-left flex items-center space-x-2 py-2">
+                          <span>👤</span>
+                          <span>Profile</span>
                         </button>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link to="admin/dashboard">
-                        <button
-                          className="text-left"
-                          style={{ width: "100px" }}
-                        >
-                          Dashboard
+                    <DropdownMenuItem className="hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200">
+                      <Link to="admin/dashboard" className="w-full">
+                        <button className="w-full text-left flex items-center space-x-2 py-2">
+                          <span>📊</span>
+                          <span>Dashboard</span>
                         </button>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link to="admin/course">
-                        <button
-                          className="text-left"
-                          style={{ width: "100px" }}
-                        >
-                          Course
+                    <DropdownMenuItem className="hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors duration-200">
+                      <Link to="admin/course" className="w-full">
+                        <button className="w-full text-left flex items-center space-x-2 py-2">
+                          <span>📖</span>
+                          <span>Course</span>
                         </button>
                       </Link>
                     </DropdownMenuItem>
                   </>
                 )}
-
-                <DropdownMenuItem>
-                  <Button style={{ width: "100px" }} onClick={handleLogout}>
-                    Logout
+                <DropdownMenuSeparator className="bg-gray-200/20" />
+                <DropdownMenuItem className="hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
+                  <Button 
+                    onClick={handleLogout}
+                    className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium py-2 rounded-md transition-all duration-200 flex items-center justify-center space-x-2"
+                  >
+                    <span>🚪</span>
+                    <span>Logout</span>
                   </Button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <div>
-              <span>{user.name}</span>
-            </div>
           </>
         ) : (
-          <div className="flex space-x-4">
-            <Button onClick={handleLoginClick}>Login</Button>
-            <Button onClick={handleSignupClick}>Signup</Button>
-            {/* <Button><Link to="login">Login</Link></Button>
-            <Button><Link to="login">Signup</Link></Button> */}
+          <div className="flex space-x-3">
+            <Button 
+              onClick={handleLoginClick}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+            >
+              🔑 Login
+            </Button>
+            <Button 
+              onClick={handleSignupClick}
+              className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold px-6 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+            >
+              ✨ Sign Up
+            </Button>
           </div>
         )}
       </div>

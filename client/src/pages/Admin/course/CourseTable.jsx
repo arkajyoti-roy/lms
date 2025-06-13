@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
+import { Edit, Plus, BookOpen, Clock } from "lucide-react";
 import {
   Table,
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -54,53 +53,105 @@ const CourseTable = () => {
     fetchCourses();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
-  if (courses.length === 0) return (
-    <div>
-      <Button className="mb-3" onClick={() => navigate(`create`)}>
-        Create a new course
-      </Button>
-      <br/>
-      <p>No courses available. </p>
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-64">
+      <div className="flex items-center space-x-2">
+        <Clock className="animate-spin h-5 w-5 text-blue-600" />
+        <p className="text-gray-600">Loading courses...</p>
+      </div>
     </div>
-      );
-  return (
-    <div>
-      <Button className="mb-3" onClick={() => navigate(`create`)}>
-        Create a new course
+  );
+
+  if (courses.length === 0) return (
+    <div className="text-center py-12">
+      <div className="mb-6">
+        <BookOpen className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No courses yet</h3>
+        <p className="text-gray-600 dark:text-gray-400">Get started by creating your first course</p>
+      </div>
+      <Button 
+        onClick={() => navigate(`create`)}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+      >
+        <Plus className="h-4 w-4 mr-2" />
+        Create Your First Course
       </Button>
-      <Table>
-        <TableCaption>A list of your recent courses.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Price</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Title</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead className="text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {courses.map((course) => (
-            <TableRow key={course._id}>
-              <TableCell className="font-medium">{course.coursePrice ? course.coursePrice : "N/A"}</TableCell>
-              <TableCell>{course.isPublished ? "Published" : "Draft"}</TableCell>
-              <TableCell>{course.courseTitle}</TableCell>
-              <TableCell>{course.courseDescription}</TableCell>
-              <TableCell className="text-right">
-                <Button onClick={()=> navigate(`${course._id}`)}>Edit<Edit /></Button>
-              </TableCell>
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Header Section */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">My Courses</h1>
+          <p className="text-gray-600 dark:text-gray-400">Manage and edit your courses</p>
+        </div>
+        <Button 
+          onClick={() => navigate(`create`)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Create New Course
+        </Button>
+      </div>
+
+      {/* Table Section */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <Table>
+          <TableCaption className="text-gray-500 dark:text-gray-400">
+            A list of your recent courses ({courses.length} total)
+          </TableCaption>
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[120px] font-semibold">Price</TableHead>
+              <TableHead className="font-semibold">Status</TableHead>
+              <TableHead className="font-semibold">Title</TableHead>
+              <TableHead className="font-semibold">Description</TableHead>
+              <TableHead className="text-right font-semibold">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}></TableCell>
-            <TableCell className="text-right"></TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {courses.map((course) => (
+              <TableRow 
+                key={course._id}
+                className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+              >
+                <TableCell className="font-semibold text-green-600 dark:text-green-400">
+                  {course.coursePrice ? `₹${course.coursePrice}` : "Free"}
+                </TableCell>
+                <TableCell>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                    course.isPublished 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
+                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+                  }`}>
+                    {course.isPublished ? "Published" : "Draft"}
+                  </span>
+                </TableCell>
+                <TableCell className="font-medium text-gray-900 dark:text-white">
+                  {course.courseTitle}
+                </TableCell>
+                <TableCell className="text-gray-600 dark:text-gray-400 max-w-xs truncate">
+                  {course.courseDescription}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button 
+                    onClick={() => navigate(`${course._id}`)}
+                    variant="outline"
+                    size="sm"
+                    className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
+                  >
+                    <Edit className="h-4 w-4 mr-1" />
+                    Edit
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
       <div>
         <Outlet />
       </div>
