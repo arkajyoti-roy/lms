@@ -17,13 +17,25 @@ const Course = () => {
   const { user, isLoading } = useUserDetails();
   const navigate = useNavigate();
 
+  // Fisher-Yates shuffle algorithm to randomize array
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
         const response = await axios.get(`${COURSES_URL}/publichedCourses`);
-        setCourses(response.data.courses);
-        setFilteredCourses(response.data.courses);
+        // Randomize courses immediately after fetching
+        const randomizedCourses = shuffleArray(response.data.courses);
+        setCourses(randomizedCourses);
+        setFilteredCourses(randomizedCourses);
         console.log(response.data.courses);
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -67,7 +79,7 @@ const Course = () => {
         filtered = [...filtered].sort((a, b) => a.courseTitle.localeCompare(b.courseTitle));
         break;
       default:
-        // Keep original order for "newest"
+        // Keep original randomized order for "newest"
         break;
     }
 

@@ -38,6 +38,7 @@ app.use('/api/v1/user', userRoute);
 app.use('/api/v1/course', courseRoute);
 app.use('/api/v1/media', mediaRoute);
 app.use('/api/v1/purchase', coursePurchaseRoute);
+// app.use('/api/v1/purchase', coursePurchaseRoute);
 // apis
 
 app.use("/api/v1/course-progress", courseProgressRoute); // Corrected the path

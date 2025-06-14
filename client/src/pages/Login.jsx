@@ -137,78 +137,106 @@ const Login = () => {
   ]);
 
   return (
-    <>
-      <br />
-      <div className="flex justify-center w-full pt-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome</h1>
+          <p className="text-gray-600">Join our learning community today</p>
+        </div>
+        
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="w-[400px]"
+          className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signup">Signup</TabsTrigger>
-            <TabsTrigger value="login">Login</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 mb-6 h-12 p-1 bg-gray-100 rounded-lg">
+            <TabsTrigger 
+              value="signup" 
+              className="text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all"
+            >
+              Create Account
+            </TabsTrigger>
+            <TabsTrigger 
+              value="login"
+              className="text-sm font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all"
+            >
+              Sign In
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="signup">
-            <Card>
-              <CardHeader>
-                <CardTitle>Signup</CardTitle>
-                <CardDescription>
-                  Create a new account and signup when you are done.
+          <TabsContent value="signup" className="mt-0">
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardHeader className="space-y-1 pb-6">
+                <CardTitle className="text-2xl font-semibold text-center">Create Account</CardTitle>
+                <CardDescription className="text-center text-gray-600">
+                  Enter your details to get started with your learning journey
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="name">Name</Label>
+              <CardContent className="space-y-4 px-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-sm font-medium text-gray-700">
+                    Full Name
+                  </Label>
                   <Input
                     type="text"
                     name="name"
                     onChange={(e) => handleInputChange(e, "signup")}
-                    placeholder="Eg. arka"
+                    placeholder="Enter your full name"
+                    className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    Email Address
+                  </Label>
                   <Input
                     type="email"
                     name="email"
                     onChange={(e) => handleInputChange(e, "signup")}
-                    placeholder="Eg. xy@z.com"
+                    placeholder="Enter your email address"
+                    className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="phone">Phone</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                    Phone Number
+                  </Label>
                   <Input
                     type="text"
                     name="phone"
                     onChange={(e) => handleInputChange(e, "signup")}
-                    placeholder="Eg. 1236564554"
+                    placeholder="Enter your phone number"
+                    className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                    Password
+                  </Label>
                   <Input
                     type="password"
                     name="password"
                     onChange={(e) => handleInputChange(e, "signup")}
-                    placeholder="Enter a password"
+                    placeholder="Create a strong password"
+                    className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="role">Role</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="role" className="text-sm font-medium text-gray-700">
+                    I am a
+                  </Label>
                   <Select
                     name="role"
                     value={signup.role}
                     onValueChange={handleSelectChange}
                     required
                   >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue disabled placeholder="Role" />
+                    <SelectTrigger className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500">
+                      <SelectValue placeholder="Select your role" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="student">Student</SelectItem>
@@ -217,66 +245,74 @@ const Login = () => {
                   </Select>
                 </div>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="px-6 pt-4 pb-6">
                 <Button
                   disabled={registerIsLoading}
                   onClick={() => handleSubmit("signup")}
+                  className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
                 >
                   {registerIsLoading ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please
-                      wait...
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Creating account...
                     </>
                   ) : (
-                    "Signup"
+                    "Create Account"
                   )}
                 </Button>
               </CardFooter>
             </Card>
           </TabsContent>
 
-          <TabsContent value="login">
-            <Card>
-              <CardHeader>
-                <CardTitle>Login</CardTitle>
-                <CardDescription>
-                  Login through your email or phone and password.
+          <TabsContent value="login" className="mt-0">
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardHeader className="space-y-1 pb-6">
+                <CardTitle className="text-2xl font-semibold text-center">Welcome Back</CardTitle>
+                <CardDescription className="text-center text-gray-600">
+                  Sign in to continue your learning journey
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email or Phone</Label>
+              <CardContent className="space-y-4 px-6">
+                <div className="space-y-2">
+                  <Label htmlFor="identifier" className="text-sm font-medium text-gray-700">
+                    Email or Phone
+                  </Label>
                   <Input
-                    type="email"
+                    type="text"
                     name="identifier"
                     onChange={(e) => handleInputChange(e, "login")}
-                    placeholder="Eg. xy@z.com or 1236564554"
+                    placeholder="Enter your email or phone number"
+                    className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                    Password
+                  </Label>
                   <Input
                     type="password"
                     name="password"
                     onChange={(e) => handleInputChange(e, "login")}
-                    placeholder="Eg. xyxz"
+                    placeholder="Enter your password"
+                    className="h-11 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                     required
                   />
                 </div>
               </CardContent>
-              <CardFooter>
+              <CardFooter className="px-6 pt-4 pb-6">
                 <Button
                   disabled={loginIsLoading}
                   onClick={() => handleSubmit("login")}
+                  className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
                 >
                   {loginIsLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Please wait...
+                      Signing in...
                     </>
                   ) : (
-                    "Login"
+                    "Sign In"
                   )}
                 </Button>
               </CardFooter>
@@ -284,7 +320,7 @@ const Login = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -15,6 +15,6 @@ router.route("/checkout/create-checkout-session").post(isAuthenticated, createCh
 router.route("/verify-payment").post(isAuthenticated, verifyPayment);
 router.route("/webhook").post(express.raw({ type: "application/json" }), handleWebhook);
 router.route("/course/:courseId/detail-with-status").get(isAuthenticated, getCourseDetailWithPurchaseStatus);
-router.route("/").get(isAuthenticated, getAllPurchasedCourse);
+router.route("/getPurchased-courses").get(isAuthenticated, getAllPurchasedCourse);
 
 export default router;
