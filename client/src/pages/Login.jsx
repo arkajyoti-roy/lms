@@ -83,36 +83,81 @@ const Login = () => {
     const action = type === "signup" ? registerUser : loginUser;
 
     try {
-      await action(inputData).unwrap();
+      const result = await action(inputData).unwrap();
+      console.log("Submit result:", result);
+      
+      // Alternative: Handle navigation immediately after successful API call
+      if (type === "signup") {
+        toast.success(result.message || "Signup Successful!");
+        setTimeout(() => {
+          if (signup.role === "instructor") {
+            console.log("Attempting navigation to /admin/dashboard");
+            navigate("/admin/dashboard", { replace: true });
+            // Alternative: Force navigation with window.location if navigate fails
+            // window.location.href = "/admin/dashboard";
+          } else {
+            console.log("Attempting navigation to /");
+            navigate("/", { replace: true });
+            // window.location.href = "/";
+          }
+        }, 1000);
+      } else {
+        toast.success(result.message || "Login Successful!");
+        setTimeout(() => {
+          if (result.user?.role === "instructor") {
+            console.log("Attempting navigation to /admin/dashboard");
+            navigate("/admin/dashboard", { replace: true });
+            // Alternative: Force navigation with window.location if navigate fails
+            // window.location.href = "/admin/dashboard";
+          } else {
+            console.log("Attempting navigation to /");
+            navigate("/", { replace: true });
+            // window.location.href = "/";
+          }
+        }, 1000);
+      }
     } catch (err) {
+      console.error("Submit error:", err);
       if (err.data) {
         console.error("Server response data:", err.data);
+        toast.error(err.data.message || "Operation failed!");
+      } else {
+        toast.error("Operation failed!");
       }
     }
   };
 
   useEffect(() => {
     if (registerIsSuccess && registerData) {
+      console.log("Register success:", registerData);
+      console.log("Signup role:", signup.role);
       toast.success(registerData.message || "Signup Successful!");
       setTimeout(() => {
         if (signup.role === "instructor") {
+          console.log("Navigating to /admin/dashboard");
           navigate("/admin/dashboard");
         } else {
+          console.log("Navigating to /");
           navigate("/");
         }
       }, 1000);
     }
     if (loginIsSuccess && loginData) {
+      console.log("Login success:", loginData);
+      console.log("User role:", loginData.user?.role);
       toast.success(loginData.message || "Login Successful!");
       setTimeout(() => {
-        if (loginData.user.role === "instructor") {
+        if (loginData.user?.role === "instructor") {
+          console.log("Navigating to /admin/dashboard");
           navigate("/admin/dashboard");
         } else {
+          console.log("Navigating to /");
           navigate("/");
         }
       }, 1000);
     }
     if (registerError) {
+      console.log("Register error:", registerError);
       const errorMessage =
         registerError.data?.message ||
         registerError.message ||
@@ -120,20 +165,20 @@ const Login = () => {
       toast.error(errorMessage);
     }
     if (loginError) {
+      console.log("Login error:", loginError);
       const errorMessage =
         loginError.data?.message || loginError.message || "Login Failed!";
       toast.error(errorMessage);
     }
   }, [
-    loginIsLoading,
-    registerIsLoading,
+    loginIsSuccess,
+    registerIsSuccess,
     loginData,
     registerData,
     loginError,
     registerError,
-    loginIsSuccess,
-    registerIsSuccess,
     navigate,
+    signup.role,
   ]);
 
   return (
